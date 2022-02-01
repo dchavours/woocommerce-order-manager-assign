@@ -30,6 +30,7 @@
 			add_action( 'manage_shop_order_posts_custom_column', array($this, "orders_col_val"), 10, 1 );
 			//add_action( 'show_user_profile', array($this, "user_profile") );
 			add_action( 'personal_options', array($this, "user_profile") );
+			add_action( 'admin_menu', array($this, 'my_admin_menu') );
 		}
 		
 		public function save_post($post_id) {
@@ -207,6 +208,22 @@
 			$css_path = $this->config["url"]."assets/css/";
 			
 			wp_enqueue_style( 'woo-oma-style', $css_path."styles.css" );
+		}
+		public function my_admin_menu() {
+
+			add_menu_page( 'Course Manager', 'Bookings Overview', 'manage_options', 'ParentPageCM', array( $this , 'cm_admin_callback') , 'dashicons-calendar', 250  );
+	
+			// add_menu_page( $page_title:string, $menu_title:string, $capability:string, $menu_slug:string, $function:callable, $icon_url:string, $position:integer|null )
+			// add_submenu_page( $parent_slug:string, $page_title:string, $menu_title:string, $capability:string, $menu_slug:string, $function:callable, $position:integer|null )
+	
+		}
+	
+	
+		public function cm_admin_callback(){
+			//return views
+			require_once 'partials/course-manager-admin-display.php';
+	
+	
 		}
 
 		
