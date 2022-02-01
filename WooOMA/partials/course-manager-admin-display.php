@@ -14,7 +14,18 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
+<title>jQuery UI Datepicker functionality</title>
 
+<script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+<!-- Javascript -->
+<script>
+   $(function() {
+      $( "#datepicker-13" ).datepicker();
+      $( "#datepicker-13" ).datepicker("show");
+   });
+</script>
       <!-- HTML --> 
       <p>Enter Date: <input type = "text" id = "datepicker-13"></p>
 	
