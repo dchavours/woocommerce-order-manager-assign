@@ -45,24 +45,24 @@
   <br><br>
 </form>
 
+<?php  echo "product id: " . 8466; ?>
 
 
-<form action="/action_page.php">
+<!-- <form action="/action_page.php">
   <label for="cars">Enter Time:</label>
   <select name="cars" id="cars">
     <option value="volvo">11:00 am</option>
     <option value="saab">Saab</option>
     <option value="opel">Opel</option>
     <option value="audi">Audi</option>
-
-
   </select>
   <br><br>
-</form>
+</form> -->
 
 
 <button>Generate Class Overview</button>
 
+<h1>&nbsp;</h1>
 
 	
 	Then after that it will show a table of all the people and if they paid or not and make it so people haven't
@@ -70,3 +70,24 @@
 	
 	<?
 
+// Access WordPress database
+global $wpdb;
+ 
+// Select Product ID
+$product_id = 8466;
+       
+// Find billing emails in the DB order table
+$statuses = array_map( 'esc_sql', wc_get_is_paid_statuses() );
+$customer_emails = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_billing_email' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
+");
+ 
+// Print array on screen
+print_r( $customer_emails );
