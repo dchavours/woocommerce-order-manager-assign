@@ -54,14 +54,14 @@
     <option value="saab">Saab</option>
     <option value="opel">Opel</option>
     <option value="audi">Audi</option>
-    <?php foreach ( WC_Bookings_Admin::get_booking_products() as $product ) : ?>
-								<option value="<?php echo esc_attr( $product->get_id() ); ?>"><?php echo esc_html( sprintf( '%s (#%s)', $product->get_name(), $product->get_id() ) ); ?></option>
-		<?php endforeach; ?>
 
 
   </select>
   <br><br>
 </form>
+
+
+<button>Generate Class Overview</button>
 
 
 	
