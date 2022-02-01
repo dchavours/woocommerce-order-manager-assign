@@ -208,6 +208,12 @@
 			$css_path = $this->config["url"]."assets/css/";
 			
 			wp_enqueue_style( 'woo-oma-style', $css_path."styles.css" );
+			wp_localize_script('woo-cm-js', "cm_path",array(
+				"name" => "Name",
+				"author" => "Author",
+				"ajaxurl" => admin_url("admin-ajax.php")
+
+		));
 		}
 		public function my_admin_menu() {
 
