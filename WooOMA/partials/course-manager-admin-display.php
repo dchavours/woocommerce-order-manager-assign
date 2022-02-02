@@ -119,7 +119,7 @@ $result = $wpdb->get_row( "SELECT * FROM `wp_ppsimple` ORDER BY `name` LIMIT 50 
 ?><div>You searched for <?php  ?> and we found... <?php 
 
 echo 504;
-echo $result;
+echo $search;
 
 
 ?></div><?php
