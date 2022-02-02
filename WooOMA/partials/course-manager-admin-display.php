@@ -61,8 +61,6 @@ if(isset($_POST["date"]) && isset($_POST["courseName"])){
   $courseName = $_POST['courseName'];
 
 
-$result = $wpdb->get_row( "SELECT * FROM `wp_comments` ORDER BY `name` LIMIT 50 " );
-
 ?><div>You searched for <?php  ?> and we found... <?php 
 
 $product_id = $courseName;
