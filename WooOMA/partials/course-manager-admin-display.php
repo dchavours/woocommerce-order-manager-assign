@@ -11,9 +11,14 @@
  * @package    Course_Manager
  * @subpackage Course_Manager/admin/partials
  */
+
+ 
 ?>
 
+
+
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
+
 <h1>&nbsp;</h1>
 
 
@@ -28,7 +33,35 @@
    });
 </script>
 
+<?
+//var_dump(WC_Bookings_Admin::get_booking_resources());
 
+?>
+
+
+<?php
+// All bookable slots.
+
+$bookableSlots = array();
+foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
+    print_r($product->get_id() . " : " .  $product->get_name() );
+    $bookedOrNah = WC_Global_Availability_Data_Store::get_events_in_date_range(0, 999999999999999, $product->get_id());
+    var_dump($bookedOrNah);
+
+    echo "<br>";
+    
+
+
+
+
+
+
+}
+
+
+
+
+?>
 
 <form action="" method="post">
       <!-- HTML --> 
@@ -44,7 +77,6 @@
   <h1>&nbsp;</h1>
   <input type ="submit">
   </form>
-
 
 
 <h1>&nbsp;</h1>
@@ -104,6 +136,5 @@ while($row = $result->fetch_assoc() ){
 $conn->close();
 
 }
-
 
 
