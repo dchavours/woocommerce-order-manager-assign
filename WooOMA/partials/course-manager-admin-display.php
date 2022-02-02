@@ -45,12 +45,15 @@
 $bookableSlots = array();
 foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
     print_r($product->get_id() . " : " .  $product->get_name() );
-    $bookedOrNah = WC_Global_Availability_Data_Store::get_events_in_date_range(0, 999999999999999, $product->get_id());
-    var_dump($bookedOrNah);
+    // $bookedOrNah = WC_Booking_Data_Store::get_bookings_star_and_end_times($product);
+    // var_dump($bookedOrNah);
 
     echo "<br>";
-    
 
+    //WC_Booking_Form::get_time_slots_html($product, $bookableSlots);
+    
+    $millie = new WC_Booking_Form($product);
+    var_dump(   $millie->get_time_slots_html($product, $bookableSlots));
 
 
 
