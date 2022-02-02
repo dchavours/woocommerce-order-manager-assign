@@ -33,3 +33,7 @@ use this to figure out how to use the blocks Parameter.
 		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput
 		exit;
 	}
+
+
+Figure out how the blocks work: 
+public function get_blocks_in_range( )
