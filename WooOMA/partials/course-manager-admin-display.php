@@ -91,3 +91,11 @@ $customer_emails = $wpdb->get_col("
  
 // Print array on screen
 print_r( $customer_emails );
+
+
+?>
+
+<form action="phpSearch.php" method="post">
+Search <input type="text" name="searchVar"><br>
+<input type ="submit">
+</form
