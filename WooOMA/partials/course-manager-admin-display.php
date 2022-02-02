@@ -95,7 +95,51 @@ print_r( $customer_emails );
 
 ?>
 
-<form action="phpSearch.php" method="post">
+<form action="" method="post">
 Search <input type="text" name="searchVar"><br>
 <input type ="submit">
-</form
+  </form>
+  <?php
+
+
+
+if(isset($_POST["searchVar"])){
+
+  $search = $_POST['searchVar'];
+
+// get the search query
+$search_text = ($_POST["search_text"]);
+
+// clean it up
+$search_text = sanitize_text_field( $search_text);
+
+
+$result = $wpdb->get_row( "SELECT * FROM `wp_ppsimple` ORDER BY `name` LIMIT 50 " );
+
+?><div>You searched for <?php  ?> and we found... <?php 
+
+echo 504;
+echo $result;
+
+
+?></div><?php
+
+// stop doing stuff
+die();
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0){
+while($row = $result->fetch_assoc() ){
+	echo $row["name"]."  ".$row["age"]."  ".$row["gender"]."<br>";
+}
+} else {
+	echo "0 records";
+}
+
+$conn->close();
+
+}
+
+
+

@@ -3,18 +3,28 @@
 // I think that this plays on the name searchVar 
 $search = $_POST['searchVar'];
 
-$servername = "localhost";
-$username = "bob";
-$password = "123456";
-$db = "classDB";
+global $wpdb;
 
-$conn = new mysqli($servername, $username, $password, $db);
 
-if ($conn->connect_error){
-	die("Connection failed: ". $conn->connect_error);
+// get the search query
+$search_text = ($_POST["search_text"]);
+
+// clean it up
+$search_text = sanitize_text_field( $search_text);
+
+
+$result = $wpdb->get_row( "SELECT * FROM `wp_ppsimple` ORDER BY `name` LIMIT 50 " );
+
+?><div>You searched for <?php echo $search_text; ?> and we found... <?php 
+
+foreach ($result as $row) {
+echo $row->t; 
 }
 
-$sql = "select * from students where name like '%$search%'";
+?></div><?php
+
+// stop doing stuff
+die();
 
 $result = $conn->query($sql);
 
