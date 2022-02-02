@@ -14,7 +14,8 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<title>jQuery UI Datepicker functionality</title>
+<h1>&nbsp;</h1>
+
 
 <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
 <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -26,56 +27,50 @@
       $( "#datepicker-13" ).datepicker("show");
    });
 </script>
+
+
+
+<form action="" method="post">
       <!-- HTML --> 
-      <p>Enter Date: <input type = "text" id = "datepicker-13"></p>
-	
-	Then once they select the Date, then the next input comes up.
-
-	<h1>&nbsp;</h1>
-		
-
-
-<form action="/action_page.php">
-  <label for="cars">Enter Course Name:</label>
-  <select name="cars" id="cars">
+      <p>Enter Date:</p> 
+      <input name="date" type = "text" id = "datepicker-13">
+      <h1>&nbsp;</h1>
+      <p>Enter Course:</p> 
+  <select name="courseName" id="courseNameId">
   <?php foreach ( WC_Bookings_Admin::get_booking_products() as $product ) : ?>
 								<option value="<?php echo esc_attr( $product->get_id() ); ?>"><?php echo esc_html( sprintf( '%s (#%s)', $product->get_name(), $product->get_id() ) ); ?></option>
 		<?php endforeach; ?>
   </select>
-  <br><br>
-</form>
-
-<?php  echo "product id: " . 8466; ?>
-
-
-<!-- <form action="/action_page.php">
-  <label for="cars">Enter Time:</label>
-  <select name="cars" id="cars">
-    <option value="volvo">11:00 am</option>
-    <option value="saab">Saab</option>
-    <option value="opel">Opel</option>
-    <option value="audi">Audi</option>
-  </select>
-  <br><br>
-</form> -->
+  <h1>&nbsp;</h1>
+  <input type ="submit">
+  </form>
 
 
-<button>Generate Class Overview</button>
 
 <h1>&nbsp;</h1>
 
-	
-	Then after that it will show a table of all the people and if they paid or not and make it so people haven't
-	paid are at the top of the list then after that, people who haven't paid for textbooks are below them. 
-	
+
 	<?
 
 // Access WordPress database
 global $wpdb;
  
+if(isset($_POST["date"]) && isset($_POST["courseName"])){
+
+  $searchDate = $_POST['date'];
+  $courseName = $_POST['courseName'];
+
+
+$result = $wpdb->get_row( "SELECT * FROM `wp_comments` ORDER BY `name` LIMIT 50 " );
+
+?><div>You searched for <?php  ?> and we found... <?php 
+
+$product_id = $courseName;
+
+var_dump($searchDate);
+var_dump($courseName);
 // Select Product ID
-$product_id = 8466;
-       
+
 // Find billing emails in the DB order table
 $statuses = array_map( 'esc_sql', wc_get_is_paid_statuses() );
 $customer_emails = $wpdb->get_col("
@@ -93,36 +88,7 @@ $customer_emails = $wpdb->get_col("
 print_r( $customer_emails );
 
 
-?>
 
-<form action="" method="post">
-Search <input type="text" name="searchVar"><br>
-<input type ="submit">
-  </form>
-  <?php
-
-
-
-if(isset($_POST["searchVar"])){
-
-  $search = $_POST['searchVar'];
-
-// get the search query
-$search_text = ($_POST["search_text"]);
-
-// clean it up
-$search_text = sanitize_text_field( $search_text);
-
-
-$result = $wpdb->get_row( "SELECT * FROM `wp_ppsimple` ORDER BY `name` LIMIT 50 " );
-
-?><div>You searched for <?php  ?> and we found... <?php 
-
-echo 504;
-echo $search;
-
-
-?></div><?php
 
 // stop doing stuff
 die();
