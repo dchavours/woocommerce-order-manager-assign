@@ -40,8 +40,14 @@
 
 
 <?php
-// All bookable slots.
 
+
+// This is where blocks come from: 
+
+//$blocks       = $product->get_blocks_in_range( $from, $to, array( $interval, $base_interval ), $resource_id_to_check );
+
+
+// All bookable slots.
 $bookableSlots = array();
 foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
     print_r($product->get_id() . " : " .  $product->get_name() );
@@ -51,14 +57,26 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
     echo "<br>";
 
     //WC_Booking_Form::get_time_slots_html($product, $bookableSlots);
+
+    $bookieInit = new WC_Product_Booking; 
     
-    $millie = new WC_Booking_Form($product);
-    var_dump(   $millie->get_time_slots_html($product, $bookableSlots));
+    var_dump($bookieInit->get_first_block_time());
+    
+    $bookie = new WC_Booking_Form($product);
+  //  var_dump(   $bookie->get_time_slots_html($product, $bookableSlots));
 
+  $posted = array();
+		if ( ! empty( $posted['wc_bookings_field_duration'] ) ) {
+			$interval = (int) $posted['wc_bookings_field_duration'] * $product->get_duration();
+		} else {
+			$interval = $product->get_duration();
+		}
 
+		$base_interval = $product->get_duration();
 
+      var_dump($base_interval);
 
-
+      var_dump($interval);
 }
 
 
