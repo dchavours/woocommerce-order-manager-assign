@@ -103,12 +103,6 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
 
 
-		var_dump($blocks);
-
-
-      var_dump($base_interval);
-
-      var_dump($interval);
 }
 
 
@@ -148,7 +142,21 @@ global $wpdb;
  
 if(isset($_POST["date"]) && isset($_POST["courseName"])){
 
+
   $searchDate = $_POST['date'];
+  $month = substr($searchDate,0,2);
+  $day = substr($searchDate,3,2);
+  $year = substr($searchDate,6);
+  echo $month.$day.$year;
+
+  $findDateBooking = new  WC_Bookings_Calendar();
+  $getGoogleEvents = new WC_Bookings_Google_Calendar_Connection();
+
+  $getGoogleEvents->get_events();
+  $findDateBooking->list_bookings($day, $month, $year);
+
+
+
   $courseName = $_POST['courseName'];
 
 
@@ -156,7 +164,7 @@ if(isset($_POST["date"]) && isset($_POST["courseName"])){
 
 $product_id = $courseName;
 
-var_dump($searchDate);
+
 var_dump($courseName);
 // Select Product ID
 
