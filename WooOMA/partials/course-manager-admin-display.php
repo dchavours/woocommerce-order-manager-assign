@@ -44,8 +44,6 @@
 
 // This is where blocks come from: 
 
-//$blocks       = $product->get_blocks_in_range( $from, $to, array( $interval, $base_interval ), $resource_id_to_check );
-
 
 // All bookable slots.
 $bookableSlots = array();
@@ -58,6 +56,8 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
     //WC_Booking_Form::get_time_slots_html($product, $bookableSlots);
 
+   // This might be bad because the og class I'm calling might not be called with the right class. 
+
     $bookieInit = new WC_Product_Booking; 
     
     var_dump($bookieInit->get_first_block_time());
@@ -65,19 +65,47 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
     $bookie = new WC_Booking_Form($product);
   //  var_dump(   $bookie->get_time_slots_html($product, $bookableSlots));
 
-  $posted = array();
+      $posted = array();
 		if ( ! empty( $posted['wc_bookings_field_duration'] ) ) {
 			$interval = (int) $posted['wc_bookings_field_duration'] * $product->get_duration();
 		} else {
 			$interval = $product->get_duration();
 		}
+		$min_duration     = $product->get_min_duration();
 
-		$base_interval = $product->get_duration();
+
+      $first_block_time     = $product->get_first_block_time();
+		
+      $base_interval = $product->get_duration();
+
+      $intervals        = array( $min_duration * $base_interval, $base_interval );
+      $timestamp = strtotime( "{2021}-{01}-{04}" );
+
+		$from                 = strtotime( $first_block_time ? $first_block_time : 'midnight', $timestamp );
+      $standard_from        = $from;
+
+		$resource_id_to_check = ( ! empty( $posted['wc_bookings_field_resource'] ) ? $posted['wc_bookings_field_resource'] : 0 );
+      $to = strtotime( '+ 1 day', $standard_from ) + $interval;
+      $to                   = strtotime( 'midnight', $to ) - 1;
+
+      // Now I gotta get the blocks. 
+		$blocks       = $product->get_blocks_in_range( $from, $to, array( $interval, $base_interval ), $resource_id_to_check );
+//      var_dump(   $bookie->get_time_slots_html(, $intervals));
+
+
+
+
 
       var_dump($base_interval);
 
       var_dump($interval);
 }
+
+
+
+
+// My goal is to exectue this function. 
+// public function get_time_slots_html( $blocks, $intervals = array(), $resource_id = 0, $from = 0, $to = 0 ) {
 
 
 
