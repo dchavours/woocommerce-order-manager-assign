@@ -58,7 +58,7 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
    // This might be bad because the og class I'm calling might not be called with the right class. 
 
-    $bookieInit = new WC_Product_Booking; 
+    $bookieInit = new WC_Product_Booking($product->get_id()); 
     
     var_dump($bookieInit->get_first_block_time());
     
@@ -88,12 +88,22 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
       $to = strtotime( '+ 1 day', $standard_from ) + $interval;
       $to                   = strtotime( 'midnight', $to ) - 1;
 
+
+      //$productTwo = 
+    //  $bookableProductId =       new WC_Product_Booking( $id )
+
+
+
+
       // Now I gotta get the blocks. 
 		$blocks       = $product->get_blocks_in_range( $from, $to, array( $interval, $base_interval ), $resource_id_to_check );
-//      var_dump(   $bookie->get_time_slots_html(, $intervals));
+
+
+     var_dump(   $bookie->get_time_slots_html($blocks, array( $interval, $base_interval ), $resource_id_to_check, $from, $to));
 
 
 
+		var_dump($blocks);
 
 
       var_dump($base_interval);
