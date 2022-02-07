@@ -192,8 +192,13 @@ $customer_emails = $wpdb->get_col("
    AND im.meta_value = $product_id
 ");
  
+// People who have purchased that course.
+
+echo "People who have purchased the course: " . $product_id . " ";
 // Print array on screen
 print_r( $customer_emails );
+
+echo "This line will print out the dates for each person when they plan on taking the course: ";
 
 
 
