@@ -41,12 +41,8 @@
 
 <?php
 
+$coursesWithTimes = array();
 
-// This is where blocks come from: 
-
-
-// All bookable slots.
-$bookableSlots = array();
 foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
     print_r($product->get_id() . " : " .  $product->get_name() );
     // $bookedOrNah = WC_Booking_Data_Store::get_bookings_star_and_end_times($product);
@@ -54,16 +50,16 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
     echo "<br>";
 
-    //WC_Booking_Form::get_time_slots_html($product, $bookableSlots);
+
 
    // This might be bad because the og class I'm calling might not be called with the right class. 
 
     $bookieInit = new WC_Product_Booking($product->get_id()); 
     
-    var_dump($bookieInit->get_first_block_time());
+   //  var_dump($bookieInit->get_first_block_time());
     
     $bookie = new WC_Booking_Form($product);
-  //  var_dump(   $bookie->get_time_slots_html($product, $bookableSlots));
+
 
       $posted = array();
 		if ( ! empty( $posted['wc_bookings_field_duration'] ) ) {
@@ -89,27 +85,27 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
       $to                   = strtotime( 'midnight', $to ) - 1;
 
 
-      //$productTwo = 
-    //  $bookableProductId =       new WC_Product_Booking( $id )
+      echo ("Duration of course " . $product->get_id()   .  " = "  . $interval . " hours <br>");
+      echo ("First block time = " . $bookieInit->get_first_block_time());
+      echo ("<br>");
+      echo ("<br>");
+      echo ("<br>");
 
-
-
-
-      // Now I gotta get the blocks. 
-		$blocks       = $product->get_blocks_in_range( $from, $to, array( $interval, $base_interval ), $resource_id_to_check );
-
-
-     var_dump(   $bookie->get_time_slots_html($blocks, array( $interval, $base_interval ), $resource_id_to_check, $from, $to));
-
+      // foreach
+   //    $cartItems[] = array(
+   //       'id' => $cart_item_two['data']->get_id(),
+   //       'quantity' => $cart_item_two['quantity'],
+   //   );
 
 
 }
 
 
+// This for lop is going to generate the times which correlate with each course. 
 
 
-// My goal is to exectue this function. 
-// public function get_time_slots_html( $blocks, $intervals = array(), $resource_id = 0, $from = 0, $to = 0 ) {
+
+
 
 
 
@@ -128,6 +124,8 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 		<?php endforeach; ?>
   </select>
   <h1>&nbsp;</h1>
+
+
   <input type ="submit">
   </form>
 
@@ -138,6 +136,13 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 	<?
 
 // Access WordPress database
+
+// There will be a filter here which will say Enter course which will filter the results by block per the day. 
+
+
+
+
+
 global $wpdb;
  
 if(isset($_POST["date"]) && isset($_POST["courseName"])){
@@ -148,12 +153,18 @@ if(isset($_POST["date"]) && isset($_POST["courseName"])){
   $day = substr($searchDate,3,2);
   $year = substr($searchDate,6);
   echo $month.$day.$year;
+  $day_start    = strtotime( 'midnight', strtotime( $day ) );
+  $day_end      = strtotime( 'midnight +1 day', strtotime( $day ) ) - 1;
 
   $findDateBooking = new  WC_Bookings_Calendar();
-  $getGoogleEvents = new WC_Bookings_Google_Calendar_Connection();
 
-  $getGoogleEvents->get_events();
-  $findDateBooking->list_bookings($day, $month, $year);
+  $product_filter  = isset( $_REQUEST['filter_bookings_product'] ) ? absint( $_REQUEST['filter_bookings_product'] ) : '';
+  
+  $booking_filter = array();
+  if ( $product_filter ) {
+     array_push( $booking_filter, $product_filter );
+  }
+//   $events = array();
 
 
 
