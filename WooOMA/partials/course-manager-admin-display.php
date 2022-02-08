@@ -191,6 +191,50 @@ $customer_emails = $wpdb->get_col("
    AND im.meta_key IN ( '_product_id', '_variation_id' )
    AND im.meta_value = $product_id
 ");
+
+
+// Trying to copy the above logic but have the variable be a series of arrays. 
+
+
+$query = $wpdb->get_results("SELECT * FROM wp_posts", ARRAY_A);
+
+
+$i = 1;    
+
+foreach($query as $row)
+{
+    // do stuff with $row here.
+    echo "yeet";
+    echo "<br>";
+    echo "<td>$i</td>";
+    $i++;
+
+   }
+
+
+/*
+$sql = "SELECT * FROM test_sort";
+$get_fruit = mysqli_query( $con_wp, $sql );
+
+while ( $row = mysqli_fetch_array( $get_fruit ) ) {
+$items[$row['id']] = array('fruit' =&gt; $row['fruit'], 'color' =&gt; $row['color'], 'price' =&gt; $row['price']);
+}
+
+array_multisort( array_column( $items, 'price' ), $items );
+
+print_r($items);
+*/
+
+
+
+
+//
+
+
+
+
+
+
  
 // People who have purchased that course.
 
@@ -200,6 +244,9 @@ print_r( $customer_emails );
 
 echo "This line will print out the dates for each person when they plan on taking the course: ";
 
+echo "<br>";
+
+var_dump($customer_emails);
 
 
 
