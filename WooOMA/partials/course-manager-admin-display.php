@@ -181,6 +181,15 @@ var_dump($courseName);
 
 // Find billing emails in the DB order table
 $statuses = array_map( 'esc_sql', wc_get_is_paid_statuses() );
+
+
+// echo "All people who've 'paid'";
+// print_r($statuses);
+
+// echo "<br>";
+
+
+
 $customer_emails = $wpdb->get_col("
    SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
@@ -193,10 +202,120 @@ $customer_emails = $wpdb->get_col("
 ");
 
 
+$customer_phone = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_billing_phone' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
+");
+
+$customer_booking_start = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_booking_start' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
+");
+
+
+
+$customer_booking_end = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+
+   AND pm.meta_key IN ( '_booking_end' )
+
+   AND im.meta_value = $product_id
+");
+
+
+// _payment_method_title
+
+$payment_method_title = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_payment_method_title' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
+");
+
+
+
+// People who have purchased that course.
+
+echo "People who have purchased the course: " . $product_id . " ";
+// Print array on screen
+echo "<br>";
+echo "Customer Emails:";
+echo "<br>";
+
+print_r( $customer_emails );
+echo "<br>";
+echo "Customer Phone:";
+echo "<br>";
+
+
+print_r( $customer_phone );
+
+echo "<br>";
+echo "customer_booking_start:";
+echo "<br>";
+
+print_r( $customer_booking_start );
+
+echo "<br>";
+echo "customer_booking_end:";
+echo "<br>";
+print_r( $customer_booking_end );
+
+
+
+echo "<br>";
+echo "payment_method_title:";
+echo "<br>";
+
+
+print_r( $payment_method_title );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Trying to copy the above logic but have the variable be a series of arrays. 
 
 
-$array_for_query = "SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+$array_for_query = 
+"SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
 INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id";
 
 
@@ -204,7 +323,7 @@ INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id";
 $query = $wpdb->get_results($array_for_query, ARRAY_A);
 
 
-print_r($query);
+//print_r($query);
 
 $i = 1;    
 
@@ -243,18 +362,11 @@ print_r($items);
 
 
  
-// People who have purchased that course.
 
-echo "People who have purchased the course: " . $product_id . " ";
-// Print array on screen
-print_r( $customer_emails );
 
 echo "This line will print out the dates for each person when they plan on taking the course: ";
 
 echo "<br>";
-
-var_dump($customer_emails);
-
 
 
 // stop doing stuff
