@@ -196,20 +196,26 @@ $customer_emails = $wpdb->get_col("
 // Trying to copy the above logic but have the variable be a series of arrays. 
 
 
-$query = $wpdb->get_results("SELECT * FROM wp_posts", ARRAY_A);
+$array_for_query = "SELECT * FROM {$wpdb->prefix}posts";
 
+
+
+$query = $wpdb->get_results($array_for_query, ARRAY_A);
+
+
+print_r($query);
 
 $i = 1;    
 
-foreach($query as $row)
-{
-    // do stuff with $row here.
-    echo "yeet";
-    echo "<br>";
-    echo "<td>$i</td>";
-    $i++;
+// foreach($query as $row)
+// {
+//     // do stuff with $row here.
+//     echo "yeet";
+//     echo "<br>";
+//     echo "<td>$i</td>";
+//     $i++;
 
-   }
+//    }
 
 
 /*
