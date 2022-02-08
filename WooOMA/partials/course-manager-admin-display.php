@@ -231,7 +231,7 @@ $customer_booking_end = $wpdb->get_col("
    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
    INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
    AND pm.meta_key IN ( '_booking_end' )
 
    AND im.meta_value = $product_id
@@ -241,11 +241,10 @@ $customer_booking_end = $wpdb->get_col("
 // _payment_method_title
 
 $payment_method_title = $wpdb->get_col("
-   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   SELECT pm.meta_value FROM {$wpdb->posts} AS p
    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
    INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
    AND pm.meta_key IN ( '_payment_method_title' )
    AND im.meta_key IN ( '_product_id', '_variation_id' )
    AND im.meta_value = $product_id
