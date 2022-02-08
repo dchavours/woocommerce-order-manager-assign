@@ -196,7 +196,8 @@ $customer_emails = $wpdb->get_col("
 // Trying to copy the above logic but have the variable be a series of arrays. 
 
 
-$array_for_query = "SELECT * FROM {$wpdb->prefix}posts";
+$array_for_query = "SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id";
 
 
 
