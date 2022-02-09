@@ -70,17 +70,15 @@ foreach($all_booking_starts as $booking_start ){
        $searchDate = $booking_start['meta_value'];
    
 
-      $all_booking_begins[] = array(  
-      
-      'whole_time' => $searchDate,
+      $all_booking_begins[] = $searchDate;
      
      
-      'year' => substr($searchDate,0, 4),
-      'month' => substr($searchDate,4,2),
-      'day' => substr($searchDate,6,2),
-      'hour' => substr($searchDate,8,2),
-      'second' => substr($searchDate,12,2),
-      'millisecond' => substr($searchDate,14,2));
+      // 'year' => substr($searchDate,0, 4),
+      // 'month' => substr($searchDate,4,2),
+      // 'day' => substr($searchDate,6,2),
+      // 'hour' => substr($searchDate,8,2),
+      // 'second' => substr($searchDate,12,2),
+      // 'millisecond' => substr($searchDate,14,2));
 
 
 
