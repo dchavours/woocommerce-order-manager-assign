@@ -67,7 +67,7 @@ foreach($all_booking_starts as $booking_start ){
    var_dump($booking_start);
    echo "<br>";
    echo "<br>";
-   echo $booking_start['meta_id'];
+   echo $booking_start['meta_value'];
 
 }
 
