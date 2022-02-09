@@ -67,19 +67,34 @@ $all_booking_begins = array();
 
 $i = 0;
 foreach($all_booking_starts as $booking_start ){
-
+       $searchDate = $booking_start['meta_value'];
    
 
-      $all_booking_begins[] = $booking_start['meta_value'];
+      $all_booking_begins[] = array(  
       
+      'whole_time' => $searchDate,
+     
+     
+      'year' => substr($searchDate,0, 4),
+      'month' => substr($searchDate,4,2),
+      'day' => substr($searchDate,6,2),
+      'hour' => substr($searchDate,8,2),
+      'second' => substr($searchDate,12,2),
+      'millisecond' => substr($searchDate,14,2));
+
 
 
 }
 
 print_r($all_booking_begins);
 
+echo "<br>";
+echo "504b";
 
-var_dump([0][0]);
+$array_unique_times = array_unique($all_booking_begins);
+
+print_r($array_unique_times);
+
 
 
 // Start booking_end
