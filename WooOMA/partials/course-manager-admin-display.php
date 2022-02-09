@@ -62,6 +62,16 @@ echo "504 <br>";
 var_dump($all_booking_starts);
 echo "504a";
 
+foreach($all_booking_starts as $booking_start ){
+
+   var_dump($booking_start);
+   echo "<br>";
+   echo "<br>";
+   echo $booking_start['meta_id'];
+
+}
+
+
 
 var_dump([0][0]);
 
