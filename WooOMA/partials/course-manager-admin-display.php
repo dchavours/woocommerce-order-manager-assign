@@ -96,19 +96,49 @@ $array_unique_times = array_unique($all_booking_begins);
 
 
 
+$all_booking_time_units = array();
+$all_booking_hours = array();
 
 
 
 foreach ($array_unique_times as $array_unique_time){
 
-   echo $array_unique_time;
+   $searchDate= $array_unique_time;
+
+   $all_booking_time_units[] = array(  
+
+      'whole_time' => $searchDate,
+      'year' => substr($searchDate,0, 4),
+      'month' => substr($searchDate,4,2),
+      'day' => substr($searchDate,6,2),
+      'hour' => substr($searchDate,8,2),
+      'minute' => substr($searchDate,12,2)
+   );
+   $hourInt = (int)substr($searchDate,8,2);
 
 
-   
+   $all_booking_hours[] = $hourInt;
+
+
 }
 
+echo "<br>";
+echo "504c";
+echo "<br>";
 
+var_dump($all_booking_time_units);
 
+echo "<br>";
+echo "504d";
+echo "<br>";
+
+// var_dump($all_booking_hours);
+// insert new array_unique here
+
+$unique_all_booking_hours = array_unique($all_booking_hours);
+sort($unique_all_booking_hours);
+
+var_dump($unique_all_booking_hours);
 
 // Start booking_end
 
