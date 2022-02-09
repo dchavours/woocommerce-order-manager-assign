@@ -91,7 +91,22 @@ echo "504b";
 
 $array_unique_times = array_unique($all_booking_begins);
 
-print_r($array_unique_times);
+//print_r($array_unique_times);
+
+
+
+
+
+
+
+foreach ($array_unique_times as $array_unique_time){
+
+   echo $array_unique_time;
+
+
+   
+}
+
 
 
 
