@@ -51,22 +51,22 @@
 // Start booking_start
 global $wpdb;
 
-$all_booking_starts = array();
+$all_booking_starts_row = array();
 
 $all_booking_starts_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_booking_start'";
 
-$all_booking_starts = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
+$all_booking_starts_row = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
 
 
 echo "504 <br>";
-var_dump($all_booking_starts);
+//var_dump($all_booking_starts_row);
 echo "504a";
 echo "<br>";
 
 $all_booking_begins = array();
 
 $i = 0;
-foreach($all_booking_starts as $booking_start ){
+foreach($all_booking_starts_row as $booking_start ){
        $searchDate = $booking_start['meta_value'];
    
 
@@ -97,7 +97,7 @@ $array_unique_times = array_unique($all_booking_begins);
 
 
 $all_booking_time_units = array();
-$all_booking_hours = array();
+$all_booking_hours_begin = array();
 
 
 
@@ -117,7 +117,7 @@ foreach ($array_unique_times as $array_unique_time){
    $hourInt = (int)substr($searchDate,8,2);
 
 
-   $all_booking_hours[] = $hourInt;
+   $all_booking_hours_begin[] = $hourInt;
 
 
 }
@@ -135,10 +135,10 @@ echo "<br>";
 // var_dump($all_booking_hours);
 // insert new array_unique here
 
-$unique_all_booking_hours = array_unique($all_booking_hours);
-sort($unique_all_booking_hours);
+$unique_all_booking_hours_begin = array_unique($all_booking_hours_begin);
+sort($unique_all_booking_hours_begin);
 
-var_dump($unique_all_booking_hours);
+var_dump($unique_all_booking_hours_begin);
 
 // Start booking_end
 
@@ -248,7 +248,7 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
 
 
-
+// $unique_all_booking_hours_begin
 
 ?>
 
@@ -264,7 +264,20 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 		<?php endforeach; ?>
   </select>
   <h1>&nbsp;</h1>
+  <p>Enter Begining Hours:</p> 
+  <select name="courseName" id="courseNameId">
+  <?php foreach ($unique_all_booking_hours_begin as $hour_begin ) : ?>
+								<option value="<?php echo $hour_begin; ?>"><?php echo $hour_begin; ?></option>
+		<?php endforeach; ?>
 
+
+  </select>
+
+  <h1>&nbsp;</h1>
+
+
+
+  
 
   <input type ="submit">
   </form>
