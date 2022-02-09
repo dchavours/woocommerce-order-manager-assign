@@ -41,6 +41,72 @@
 
 <?php
 
+
+// =================
+
+// 'First' SQL Query
+
+// Trying to copy the above logic but have the variable be a series of arrays. 
+
+// Start booking_start
+global $wpdb;
+
+$all_booking_starts = array();
+
+$all_booking_starts_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_booking_start'";
+
+$all_booking_starts = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
+
+
+echo "504 <br>";
+var_dump($all_booking_starts);
+echo "504a";
+
+
+var_dump([0][0]);
+
+
+// Start booking_end
+
+$all_booking_ends = array();
+
+$all_booking_ends_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_booking_end'";
+
+$all_booking_ends = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
+
+
+
+
+
+echo "<br>";
+echo " <br>";
+echo " <br>";
+echo " <br>";
+echo "505";
+
+echo "<br>";
+var_dump($all_booking_ends);
+
+
+
+
+
+
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+
+
+
+
+
+
+// ==========================
+
+
+
 $coursesWithTimes = array();
 
 foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
@@ -202,6 +268,28 @@ $customer_emails = $wpdb->get_col("
 ");
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $customer_phone = $wpdb->get_col("
    SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
@@ -213,15 +301,26 @@ $customer_phone = $wpdb->get_col("
    AND im.meta_value = $product_id
 ");
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $customer_booking_start = $wpdb->get_col("
-   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
-   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
-   AND pm.meta_key IN ( '_booking_start' )
-   AND im.meta_key IN ( '_product_id', '_variation_id' )
-   AND im.meta_value = $product_id
+   SELECT DISTINCT FROM {$wpdb->posts} AS p
+   AND p.meta_key IN ( '_booking_start' )
+   AND p.meta_key IN ( '_product_id', '_variation_id' )
+   AND p.meta_value = $product_id
 ");
 
 
@@ -309,17 +408,6 @@ print_r( $payment_method_title );
 
 
 
-
-// Trying to copy the above logic but have the variable be a series of arrays. 
-
-
-$array_for_query = 
-"SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
-INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id";
-
-
-
-$query = $wpdb->get_results($array_for_query, ARRAY_A);
 
 
 //print_r($query);
