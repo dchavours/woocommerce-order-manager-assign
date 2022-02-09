@@ -61,16 +61,22 @@ $all_booking_starts = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_
 echo "504 <br>";
 var_dump($all_booking_starts);
 echo "504a";
+echo "<br>";
 
+$all_booking_begins = array();
+
+$i = 0;
 foreach($all_booking_starts as $booking_start ){
 
-   var_dump($booking_start);
-   echo "<br>";
-   echo "<br>";
-   echo $booking_start['meta_value'];
+   
+
+      $all_booking_begins[] = $booking_start['meta_value'];
+      
+
 
 }
 
+print_r($all_booking_begins);
 
 
 var_dump([0][0]);
