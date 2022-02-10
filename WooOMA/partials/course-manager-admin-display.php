@@ -58,10 +58,6 @@ $all_booking_starts_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_
 $all_booking_starts_row = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
 
 
-echo "504 <br>";
-//var_dump($all_booking_starts_row);
-echo "504a";
-echo "<br>";
 
 $all_booking_begins = array();
 
@@ -152,37 +148,19 @@ $all_booking_ends = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
 
 
 
-echo "<br>";
-echo " <br>";
-echo " <br>";
-echo " <br>";
-echo "505";
-
-echo "<br>";
-var_dump($all_booking_ends);
-
-
-echo "<br>";
-echo "<br>";
-echo "<br>";
-echo "<br>";
-echo "<br>";
-
-
 $min = 0;
 $max = 12;
 
 function match_pm_or_am($booking_int_times){
-   $formatted_times_begin = array();
 
    foreach($booking_int_times as $booking_int_time){
+      // echo "405 " .  $booking_int_time;
 
-      if ( ($min < $value) && ($value < $max) ){
-         // Add a pm to it. 
-         $formatted_time = $booking_int_time . ":00am"; 
-          
-          $formatted_times_begin[] = $formatted_time;
-          echo "405 " .  $booking_int_time;
+      if($booking_int_time < 12){
+
+         $formatted_times_begin[] = $booking_int_time . ":00am"; 
+         echo $formatted_times_begin;
+
       }
 
    }
@@ -265,6 +243,8 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
 
 
+ var_dump($unique_all_booking_hours_begin);
+ var_dump(match_pm_or_am($unique_all_booking_hours_begin));
 
 
 
@@ -309,11 +289,6 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
 
 	<?
-
-// Access WordPress database
-
-// There will be a filter here which will say Enter course which will filter the results by block per the day. 
-
 
 
 
