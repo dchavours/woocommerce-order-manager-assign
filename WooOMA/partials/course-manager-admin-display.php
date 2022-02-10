@@ -84,7 +84,7 @@ foreach($all_booking_starts_row as $booking_start ){
 
 }
 
-print_r($all_booking_begins);
+var_dump($all_booking_begins);
 
 echo "<br>";
 echo "504b";
@@ -138,7 +138,7 @@ echo "<br>";
 $unique_all_booking_hours_begin = array_unique($all_booking_hours_begin);
 sort($unique_all_booking_hours_begin);
 
-var_dump($unique_all_booking_hours_begin);
+//var_dump($unique_all_booking_hours_begin);
 
 // Start booking_end
 
@@ -162,15 +162,35 @@ echo "<br>";
 var_dump($all_booking_ends);
 
 
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
 
 
+$min = 0;
+$max = 12;
 
+function match_pm_or_am($booking_int_times){
+   $formatted_times_begin = array();
 
-echo "<br>";
-echo "<br>";
-echo "<br>";
-echo "<br>";
-echo "<br>";
+   foreach($booking_int_times as $booking_int_time){
+
+      if ( ($min < $value) && ($value < $max) ){
+         // Add a pm to it. 
+         $formatted_time = $booking_int_time . ":00am"; 
+          
+          $formatted_times_begin[] = $formatted_time;
+          echo "405 " .  $booking_int_time;
+      }
+
+   }
+
+   // This is going to return an array. 
+   return $formatted_times_begin;
+
+}
 
 
 
@@ -264,9 +284,11 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 		<?php endforeach; ?>
   </select>
   <h1>&nbsp;</h1>
+<?php  var_dump($unique_all_booking_hours_begin);
+  ?>
   <p>Enter Begining Hours:</p> 
   <select name="courseName" id="courseNameId">
-  <?php foreach ($unique_all_booking_hours_begin as $hour_begin ) : ?>
+  <?php foreach (match_pm_or_am($unique_all_booking_hours_begin) as $hour_begin ) : ?>
 								<option value="<?php echo $hour_begin; ?>"><?php echo $hour_begin; ?></option>
 		<?php endforeach; ?>
 
@@ -350,88 +372,6 @@ $customer_emails = $wpdb->get_col("
    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
    WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
    AND pm.meta_key IN ( '_billing_email' )
-   AND im.meta_key IN ( '_product_id', '_variation_id' )
-   AND im.meta_value = $product_id
-");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$customer_phone = $wpdb->get_col("
-   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
-   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
-   AND pm.meta_key IN ( '_billing_phone' )
-   AND im.meta_key IN ( '_product_id', '_variation_id' )
-   AND im.meta_value = $product_id
-");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$customer_booking_start = $wpdb->get_col("
-   SELECT DISTINCT FROM {$wpdb->posts} AS p
-   AND p.meta_key IN ( '_booking_start' )
-   AND p.meta_key IN ( '_product_id', '_variation_id' )
-   AND p.meta_value = $product_id
-");
-
-
-
-$customer_booking_end = $wpdb->get_col("
-   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
-   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
-   AND pm.meta_key IN ( '_booking_end' )
-
-   AND im.meta_value = $product_id
-");
-
-
-// _payment_method_title
-
-$payment_method_title = $wpdb->get_col("
-   SELECT pm.meta_value FROM {$wpdb->posts} AS p
-   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-   AND pm.meta_key IN ( '_payment_method_title' )
    AND im.meta_key IN ( '_product_id', '_variation_id' )
    AND im.meta_value = $product_id
 ");
