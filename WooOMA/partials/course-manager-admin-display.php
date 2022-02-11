@@ -42,26 +42,13 @@
 <?php
 
 
-// =================
-
-// 'First' SQL Query
-
-// Trying to copy the above logic but have the variable be a series of arrays. 
-
 // Start booking_start
 global $wpdb;
 
-$all_booking_starts_row = array();
-
 $all_booking_starts_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_booking_start'";
-
 $all_booking_starts_row = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
-
-
-
 $all_booking_begins = array();
 
-$i = 0;
 foreach($all_booking_starts_row as $booking_start ){
        $searchDate = $booking_start['meta_value'];
    
@@ -80,22 +67,10 @@ foreach($all_booking_starts_row as $booking_start ){
 
 }
 
-var_dump($all_booking_begins);
-
-echo "<br>";
-echo "504b";
 
 $array_unique_times = array_unique($all_booking_begins);
-
-//print_r($array_unique_times);
-
-
-
-
 $all_booking_time_units = array();
 $all_booking_hours_begin = array();
-
-
 
 foreach ($array_unique_times as $array_unique_time){
 
@@ -118,41 +93,128 @@ foreach ($array_unique_times as $array_unique_time){
 
 }
 
-echo "<br>";
-echo "504c";
-echo "<br>";
-
-var_dump($all_booking_time_units);
-
-echo "<br>";
-echo "504d";
-echo "<br>";
-
-// var_dump($all_booking_hours);
-// insert new array_unique here
-
 $unique_all_booking_hours_begin = array_unique($all_booking_hours_begin);
 sort($unique_all_booking_hours_begin);
 
-//var_dump($unique_all_booking_hours_begin);
 
-// Start booking_end
+// Booking end logic. 
 
+$all_booking_time_units = array();
+$all_booking_hours_end = array();
+
+
+
+foreach ($array_unique_times as $array_unique_time){
+
+   $searchDate= $array_unique_time;
+
+   $all_booking_time_units[] = array(  
+
+      'whole_time' => $searchDate,
+      'year' => substr($searchDate,0, 4),
+      'month' => substr($searchDate,4,2),
+      'day' => substr($searchDate,6,2),
+      'hour' => substr($searchDate,8,2),
+      'minute' => substr($searchDate,12,2)
+   );
+   $hourInt = (int)substr($searchDate,8,2);
+
+
+   $all_booking_hours_end[] = $hourInt;
+
+
+}
+
+$unique_all_booking_hours_end = array_unique($all_booking_hours_end);
+sort($unique_all_booking_hours_end);
+
+
+
+foreach($all_booking_starts_row as $booking_start ){
+   $searchDate = $booking_start['meta_value'];
+   $all_booking_begins[] = $searchDate;
+
+
+}
+
+
+// Booking end logic.
+$all_booking_ends_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_booking_end'";
+$all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
 $all_booking_ends = array();
 
-$all_booking_ends_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_booking_end'";
+foreach($all_booking_ends_row as $booking_end ){
+   $searchDate = $booking_end['meta_value'];
+   $all_booking_ends[] = $searchDateEnd;
+ 
 
-$all_booking_ends = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
+}
+
+
+$array_unique_times_ends = array_unique($all_booking_ends);
+$all_booking_ends_time_units = array();
+$all_booking_hours_end = array();
 
 
 
 
 
-$min = 0;
-$max = 12;
+
+foreach ($array_unique_times_ends as $array_unique_time_end){
+
+   $searchDate= $array_unique_time_end;
+
+   $all_booking_ends_time_units[] = array(  
+
+      'whole_time' => $searchDate,
+      'year' => substr($searchDate,0, 4),
+      'month' => substr($searchDate,4,2),
+      'day' => substr($searchDate,6,2),
+      'hour' => substr($searchDate,8,2),
+      'minute' => substr($searchDate,12,2)
+   );
+   $hourInt = (int)substr($searchDate,8,2);
+
+
+   $all_booking_hours_begin[] = $hourInt;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function match_pm_or_am($booking_int_times){
 
+   $min = 0;
+   $max = 12;
    foreach($booking_int_times as $booking_int_time){
       // echo "405 " .  $booking_int_time;
 
@@ -178,11 +240,6 @@ function match_pm_or_am($booking_int_times){
 }
 
 
-
-
-
-
-// ==========================
 
 
 
@@ -271,16 +328,21 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 		<?php endforeach; ?>
   </select>
   <h1>&nbsp;</h1>
-<?php  var_dump($unique_all_booking_hours_begin);
-  ?>
+
   <p>Enter Begining Hours:</p> 
   <select name="courseName" id="courseNameId">
   <?php foreach (match_pm_or_am($unique_all_booking_hours_begin) as $hour_begin ) : ?>
 								<option value="<?php echo $hour_begin; ?>"><?php echo $hour_begin; ?></option>
 		<?php endforeach; ?>
-
-
   </select>
+
+  <p>Enter Ending Hours:</p> 
+  <select name="courseName" id="courseNameId">
+  <?php foreach (match_pm_or_am($unique_all_booking_hours_begin) as $hour_begin ) : ?>
+								<option value="<?php echo $hour_begin; ?>"><?php echo $hour_begin; ?></option>
+		<?php endforeach; ?>
+  </select>
+
 
   <h1>&nbsp;</h1>
 
@@ -340,12 +402,6 @@ var_dump($courseName);
 $statuses = array_map( 'esc_sql', wc_get_is_paid_statuses() );
 
 
-// echo "All people who've 'paid'";
-// print_r($statuses);
-
-// echo "<br>";
-
-
 
 $customer_emails = $wpdb->get_col("
    SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
@@ -401,68 +457,6 @@ print_r( $payment_method_title );
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//print_r($query);
-
-$i = 1;    
-
-// foreach($query as $row)
-// {
-//     // do stuff with $row here.
-//     echo "yeet";
-//     echo "<br>";
-//     echo "<td>$i</td>";
-//     $i++;
-
-//    }
-
-
-/*
-$sql = "SELECT * FROM test_sort";
-$get_fruit = mysqli_query( $con_wp, $sql );
-
-while ( $row = mysqli_fetch_array( $get_fruit ) ) {
-$items[$row['id']] = array('fruit' =&gt; $row['fruit'], 'color' =&gt; $row['color'], 'price' =&gt; $row['price']);
-}
-
-array_multisort( array_column( $items, 'price' ), $items );
-
-print_r($items);
-*/
-
-
-
-
-//
-
-
-
-
-
-
- 
-
-
-echo "This line will print out the dates for each person when they plan on taking the course: ";
-
-echo "<br>";
 
 
 // stop doing stuff
