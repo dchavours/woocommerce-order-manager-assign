@@ -163,6 +163,13 @@ function match_pm_or_am($booking_int_times){
 
       }
 
+      if($booking_int_time > 12){
+
+         $formatted_times_begin[] = $booking_int_time - 12 . ":00pm"; 
+         echo $formatted_times_begin;
+
+      }
+
    }
 
    // This is going to return an array. 
