@@ -143,50 +143,57 @@ $all_booking_ends_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_bo
 $all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
 $all_booking_ends = array();
 
+var_dump($all_booking_ends_row);
+
 foreach($all_booking_ends_row as $booking_end ){
    $searchDate = $booking_end['meta_value'];
-   $all_booking_ends[] = $searchDateEnd;
+   $all_booking_ends[] = $searchDate;
  
 
 }
 
 
 $array_unique_times_ends = array_unique($all_booking_ends);
+
 $all_booking_ends_time_units = array();
-$all_booking_hours_end = array();
+$all_booking_hours_ends = array();
 
 
 
 
+function turn_int_date_to_units($intArray){
 
-
-foreach ($array_unique_times_ends as $array_unique_time_end){
-
-   $searchDate= $array_unique_time_end;
-
-   $all_booking_ends_time_units[] = array(  
-
-      'whole_time' => $searchDate,
-      'year' => substr($searchDate,0, 4),
-      'month' => substr($searchDate,4,2),
-      'day' => substr($searchDate,6,2),
-      'hour' => substr($searchDate,8,2),
-      'minute' => substr($searchDate,12,2)
-   );
-   $hourInt = (int)substr($searchDate,8,2);
-
-
-   $all_booking_hours_begin[] = $hourInt;
-
+      foreach ($array_unique_times_ends as $array_unique_time_end){
+         $searchDate= $array_unique_time_end;
+         $all_booking_ends_time_units[] = array(  
+            'whole_time' => $searchDate,
+            'year' => substr($searchDate,0, 4),
+            'month' => substr($searchDate,4,2),
+            'day' => substr($searchDate,6,2),
+            'hour' => substr($searchDate,8,2),
+            'minute' => substr($searchDate,12,2)
+         );
+         $hourInt = (int)substr($searchDate,8,2);
+         $all_booking_hours_ends[] = $hourInt;
+      }
+      // This should return a new array. 
 
 }
 
 
 
+$unique_all_booking_hours_end = array_unique($all_booking_hours_end);
+sort($unique_all_booking_hours_end);
 
 
+var_dump($unique_all_booking_hours_end);
+
+foreach($all_booking_ends_row as $booking_end ){
+   $searchDate = $booking_end['meta_value'];
+   $all_booking_end[] = $searchDate;
 
 
+}
 
 
 
@@ -215,6 +222,7 @@ function match_pm_or_am($booking_int_times){
 
    $min = 0;
    $max = 12;
+   $i= 0;
    foreach($booking_int_times as $booking_int_time){
       // echo "405 " .  $booking_int_time;
 
@@ -231,9 +239,12 @@ function match_pm_or_am($booking_int_times){
          echo $formatted_times_begin;
 
       }
+      $i++;
 
    }
 
+
+   echo "509: The foreach for match_pm_or_am has been called " . $i . "times";
    // This is going to return an array. 
    return $formatted_times_begin;
 
@@ -308,7 +319,9 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
 
  var_dump($unique_all_booking_hours_begin);
- var_dump(match_pm_or_am($unique_all_booking_hours_begin));
+//  var_dump(match_pm_or_am($unique_all_booking_hours_begin));
+
+var_dump($unique_all_booking_hours_end);
 
 
 
@@ -338,8 +351,8 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
   <p>Enter Ending Hours:</p> 
   <select name="courseName" id="courseNameId">
-  <?php foreach (match_pm_or_am($unique_all_booking_hours_begin) as $hour_begin ) : ?>
-								<option value="<?php echo $hour_begin; ?>"><?php echo $hour_begin; ?></option>
+  <?php foreach (match_pm_or_am($unique_all_booking_hours_end) as $hour_end ) : ?>
+								<option value="<?php echo $hour_end; ?>"><?php echo $hour_end; ?></option>
 		<?php endforeach; ?>
   </select>
 
