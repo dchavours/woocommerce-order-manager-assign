@@ -49,8 +49,9 @@ $all_booking_starts_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_
 $all_booking_starts_row = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
 $all_booking_begins = array();
 
+
 foreach($all_booking_starts_row as $booking_start ){
-       $searchDate = $booking_start['meta_value'];
+      $searchDate = $booking_start['meta_value'];
    
 
       $all_booking_begins[] = $searchDate;
@@ -93,75 +94,37 @@ foreach ($array_unique_times as $array_unique_time){
 
 }
 
-$unique_all_booking_hours_begin = array_unique($all_booking_hours_begin);
-sort($unique_all_booking_hours_begin);
-
-
-// Booking end logic. 
-
-$all_booking_time_units = array();
-$all_booking_hours_end = array();
-
-
-
-foreach ($array_unique_times as $array_unique_time){
-
-   $searchDate= $array_unique_time;
-
-   $all_booking_time_units[] = array(  
-
-      'whole_time' => $searchDate,
-      'year' => substr($searchDate,0, 4),
-      'month' => substr($searchDate,4,2),
-      'day' => substr($searchDate,6,2),
-      'hour' => substr($searchDate,8,2),
-      'minute' => substr($searchDate,12,2)
-   );
-   $hourInt = (int)substr($searchDate,8,2);
-
-
-   $all_booking_hours_end[] = $hourInt;
-
-
-}
-
-$unique_all_booking_hours_end = array_unique($all_booking_hours_end);
-sort($unique_all_booking_hours_end);
-
-
-
-foreach($all_booking_starts_row as $booking_start ){
-   $searchDate = $booking_start['meta_value'];
-   $all_booking_begins[] = $searchDate;
-
-
-}
-
 
 // Booking end logic.
 $all_booking_ends_sql_command = "SELECT * FROM wp_postmeta WHERE meta_key = '_booking_end'";
 $all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
-$all_booking_ends = array();
+
 
 var_dump($all_booking_ends_row);
 
-foreach($all_booking_ends_row as $booking_end ){
-   $searchDate = $booking_end['meta_value'];
-   $all_booking_ends[] = $searchDate;
- 
+function dumb_down_array_1($complex_array_1){
+
+$all_booking_ends = array();
+foreach(
+	$all_booking_ends_row as $booking_end ){
+   		$searchDate = $booking_end['meta_value'];
+   		$all_booking_ends[] = $searchDate;
+	}
+return $all_booking_ends;
+
+
 
 }
 
 
-$array_unique_times_ends = array_unique($all_booking_ends);
-
-$all_booking_ends_time_units = array();
-$all_booking_hours_ends = array();
-
+$array_unique_times_ends = array_unique(dumb_down_array_1($all_booking_ends_row));
 
 
 
 function turn_int_date_to_units($intArray){
+
+$all_booking_ends_time_units = array();
+$all_booking_hours_ends = array();
 
       foreach ($array_unique_times_ends as $array_unique_time_end){
          $searchDate= $array_unique_time_end;
@@ -179,6 +142,15 @@ function turn_int_date_to_units($intArray){
       // This should return a new array. 
 
 }
+
+
+
+$array_unique_times_ends = array_unique(dumb_down_array_1($all_booking_ends_row));
+
+turn_int_date_to_units($array_unique_times_ends);
+
+
+
 
 
 
