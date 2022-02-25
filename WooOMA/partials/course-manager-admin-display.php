@@ -72,20 +72,18 @@ function fill_all_booking_times($arrayParam){
 // Also used to delineate hours.
 function turn_into_units($unicode_full_time_string){
 
-
 	foreach ($unicode_full_time_string as $array_unique_time_unit){
-
    
-  		 $all_booking_time_units[] = array(  
+#  		 $all_booking_time_units[] = array(  
 
-  	   	 'whole_time' => $array_unique_time_unit,
-  	    	 'year' => substr($array_unique_time_unit,0, 4),
-  	   	 'month' => substr($array_unique_time_unit,4,2),
-  	  	 'day' => substr($array_unique_time_unit,6,2),
-  	    	 'hour' => substr($array_unique_time_unit,8,2),
-  	    	 'minute' => substr($array_unique_time_unit,12,2)
-   		);
-   	$hourInt = (int)substr($array_unique_time_unit,4,2);
+#   	   	 'whole_time' => $array_unique_time_unit,
+#   	    	 'year' => substr($array_unique_time_unit,0, 4),
+#   	   	 'month' => substr($array_unique_time_unit,4,2),
+#   	  	 'day' => substr($array_unique_time_unit,6,2),
+#   	    	 'hour' => substr($array_unique_time_unit,8,2),
+#   	    	 'minute' => substr($array_unique_time_unit,12,2)
+#    		);
+   	$hourInt = (int)substr($array_unique_time_unit,8,2);
 
 
    	$all_booking_hours_begin_or_end[] = $hourInt;
@@ -97,17 +95,13 @@ function turn_into_units($unicode_full_time_string){
 
 
 
-$array_unique_time_starts = array_unique(fill_all_booking_times($all_booking_starts_row));
- 
-$array_unique_time_starts_no_repeats = array_unique(turn_into_units($array_unique_time_starts));
 
-
-
-
+// This function takes the time of strings produced by turn_into_units and decided if its am or pm. 
 function match_pm_or_am($hour_unit_array){
 
+	sort($hour_unit_array);
+
 	foreach($hour_unit_array as $booking_int_time){
-	// echo "405 " .  $booking_int_time;
 
 		if($booking_int_time < 12){
 
@@ -123,13 +117,40 @@ function match_pm_or_am($hour_unit_array){
 
 		$formatted_times_hours[] = $booking_int_time - 12 . ":00pm"; 
       		}
-      		$i++;
+      		
 	}
+
+	
 
    // This is going to return an array. 
    return $formatted_times_hours;
 
 }
+
+// Start booking start variables.
+$all_booking_starts_sql_command = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_start'";
+$all_booking_starts_row = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
+$array_unique_time_starts = array_unique(fill_all_booking_times($all_booking_starts_row));
+$array_unique_time_starts_no_repeats = array_unique(turn_into_units($array_unique_time_starts));
+
+
+
+
+// Start booking end variables. 
+$all_booking_ends_sql_command = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_end'";
+$all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
+$array_unique_time_ends = array_unique(fill_all_booking_times($all_booking_ends_row));
+$array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_time_ends));
+
+
+
+
+
+//var_dump(match_pm_or_am($array_unique_time_starts_no_repeats)); 
+//var_dump($array_unique_time_starts_no_repeats);
+
+
+
 
 
 
@@ -230,7 +251,7 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
   <p>Enter Ending Hours:</p> 
   <select name="courseName" id="courseNameId">
-  <?php foreach (match_pm_or_am($unique_all_booking_hours_end) as $hour_end ) : ?>
+  <?php foreach (match_pm_or_am($array_unique_time_ends_no_repeats ) as $hour_end ) : ?>
 								<option value="<?php echo $hour_end; ?>"><?php echo $hour_end; ?></option>
 		<?php endforeach; ?>
   </select>
