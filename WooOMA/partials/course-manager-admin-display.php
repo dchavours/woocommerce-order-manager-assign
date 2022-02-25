@@ -98,7 +98,7 @@ $array_unique_time_starts_or_ends_no_repeats = array_unique(turn_into_units($arr
 var_dump($array_unique_time_starts_or_ends_no_repeats); 
 
 
-match_pm_or_am($array_unique_time_starts_or_ends_no_repeats);
+var_dump(match_pm_or_am($array_unique_time_starts_or_ends_no_repeats));
 
 
 
@@ -114,10 +114,14 @@ function match_pm_or_am($hour_unit_array){
         	 $formatted_times_hours[] = $booking_int_time . ":00am"; 
 		}
 
+		if($booking_int_time == 12){
+			
+		$formatted_times_hours[] = $booking_int_time . ":00pm"; 
+		}
+
 		if($booking_int_time > 12){
 
 		$formatted_times_hours[] = $booking_int_time - 12 . ":00pm"; 
-       
       		}
       		$i++;
 	}
@@ -213,7 +217,7 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
 
   <select name="courseName" id="courseNameId">
-  <?php foreach ($array_unique_time_starts_or_ends_no_repeats as $hour_end ) : ?>
+  <?php foreach (match_pm_or_am($array_unique_time_starts_or_ends_no_repeats) as $hour_end ) : ?>
 								<option value="<?php echo $hour_end; ?>"><?php echo $hour_end; ?></option>
 		<?php endforeach; ?>
   </select>
