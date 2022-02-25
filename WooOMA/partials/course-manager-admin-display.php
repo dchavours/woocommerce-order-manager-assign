@@ -64,76 +64,70 @@ return $all_booking_times;
 
 
 
-$array_unique_time_starts = array_unique(fill_all_booking_times($all_booking_starts_row));
+	$array_unique_time_starts_or_ends = array_unique(fill_all_booking_times($all_booking_starts_row));
 
 
 // This function takes the large string that includes the days in the months and puts it into units that can be used better.
+// Also used to delineate hours.
+function turn_into_units($unicode_full_time_string){
+$al:%s/foo/bar/gl_booking_hours_begin_or_en = array();
 
-function turn_into_units($arrayParam){
-foreach ($arrayParam as $array_unique_time){
+	foreach ($unicode_full_time_string as $array_unique_time_unit){
 
-   $searchDate= $array_unique_time;
+   
+  		 $all_booking_time_units[] = array(  
 
-   $all_booking_time_units[] = array(  
-
-      'whole_time' => $searchDate,
-      'year' => substr($searchDate,0, 4),
-      'month' => substr($searchDate,4,2),
-      'day' => substr($searchDate,6,2),
-      'hour' => substr($searchDate,8,2),
-      'minute' => substr($searchDate,12,2)
-   );
-   $hourInt = (int)substr($searchDate,8,2);
+  	   	 'whole_time' => $array_unique_time_unit,
+  	    	 'year' => substr($array_unique_time_unit,0, 4),
+  	   	 'month' => substr($array_unique_time_unit,4,2),
+  	  	 'day' => substr($array_unique_time_unit,6,2),
+  	    	 'hour' => substr($array_unique_time_unit,8,2),
+  	    	 'minute' => substr($array_unique_time_unit,12,2)
+   		);
+   	$hourInt = (int)substr($array_unique_time_unit,4,2);
 
 
-   $all_booking_hours_begin[] = $hourInt;
+   	$all_booking_hours_begin_or_end[] = $hourInt;
 
-} 
+	} 
+	return $all_booking_hours_begin_or_end;
 }
-// Start booking end logic.
-// Booking end logic.
+//
+//
+//This should output a long string but all of those string will be unqiue and not repeat. 
 
-$all_booking_ends_sql_command = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_end'";
-
-// after this should be filled_booking_times
-
-
-$all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
-
-
-$array_unique_times_ends = array_unique(fill_all_booking_times($all_booking_ends_row));
-
-
-sort($array_unique_times_ends);
+var_dump($array_unique_time_starts_or_ends);
+var_dump(turn_into_units($array_unique_time_starts_or_ends));
 
 
 
-function match_pm_or_am($booking_int_times){
+
+
+function match_pm_or_am($hour_unit_array){
 
    $min = 0;
    $max = 12;
    $i= 0;
-   foreach($booking_int_times as $booking_int_time){
+   foreach($hour_unit_array as $booking_int_time){
       // echo "405 " .  $booking_int_time;
 
       if($booking_int_time < 12){
 
-         $formatted_times_begin[] = $booking_int_time . ":00am"; 
+         $formatted_times_hours[] = $booking_int_time . ":00am"; 
       }
 
       if($booking_int_time > 12){
 
-         $formatted_times_begin[] = $booking_int_time - 12 . ":00pm"; 
+         $formatted_times_hours[] = $booking_int_time - 12 . ":00pm"; 
        
       }
       $i++;
-
+	
    }
 
 
-   echo "509: The foreach for match_pm_or_am has been called " . $i . "times";
    // This is going to return an array. 
-   return $formatted_times_begin;
+   return $formatted_times_hours;
 
 }
 
@@ -219,10 +213,7 @@ foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
 
 
  <p>Enter Begining Hours:</p> 
-  <select name="courseName" id="courseNameId">
-	 <?php foreach (match_pm_or_am($array_unique_time_starts) as $hour_begin ) : ?>							<option value="<?php echo $hour_begin; ?>"><?php echo $hour_begin; ?></option>
-		<?php endforeach; ?>
-  </select>
+  
 
   <p>Enter Ending Hours:</p> 
   <select name="courseName" id="courseNameId">
@@ -255,10 +246,10 @@ global $wpdb;
 if(isset($_POST["date"]) && isset($_POST["courseName"])){
 
 
-  $searchDate = $_POST['date'];
-  $month = substr($searchDate,0,2);
-  $day = substr($searchDate,3,2);
-  $year = substr($searchDate,6);
+  $array_unique_time_unit = $_POST['date'];
+  $month = substr($array_unique_time_unit,0,2);
+  $day = substr($array_unique_time_unit,3,2);
+  $year = substr($array_unique_time_unit,6);
   echo $month.$day.$year;
   $day_start    = strtotime( 'midnight', strtotime( $day ) );
   $day_end      = strtotime( 'midnight +1 day', strtotime( $day ) ) - 1;
