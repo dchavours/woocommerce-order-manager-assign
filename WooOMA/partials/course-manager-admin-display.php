@@ -33,14 +33,7 @@
    });
 </script>
 
-<?
-//var_dump(WC_Bookings_Admin::get_booking_resources());
-
-?>
-
-
 <?php
-
 
 // Start booking_start
 global $wpdb;
@@ -134,8 +127,6 @@ $array_unique_time_starts = array_unique(fill_all_booking_times($all_booking_sta
 $array_unique_time_starts_no_repeats = array_unique(turn_into_units($array_unique_time_starts));
 
 
-
-
 // Start booking end variables. 
 $all_booking_ends_sql_command = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_end'";
 $all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_A);
@@ -144,76 +135,6 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
 
 
 
-
-
-//var_dump(match_pm_or_am($array_unique_time_starts_no_repeats)); 
-//var_dump($array_unique_time_starts_no_repeats);
-
-
-
-
-
-
-
-
-$coursesWithTimes = array();
-
-foreach ( WC_Bookings_Admin::get_booking_products() as $product ) {
-    print_r($product->get_id() . " : " .  $product->get_name() );
-    // $bookedOrNah = WC_Booking_Data_Store::get_bookings_star_and_end_times($product);
-    // var_dump($bookedOrNah);
-
-    echo "<br>";
-
-
-
-   // This might be bad because the og class I'm calling might not be called with the right class. 
-
-    $bookieInit = new WC_Product_Booking($product->get_id()); 
-    
-   //  var_dump($bookieInit->get_first_block_time());
-    
-    $bookie = new WC_Booking_Form($product);
-
-
-      $posted = array();
-		if ( ! empty( $posted['wc_bookings_field_duration'] ) ) {
-			$interval = (int) $posted['wc_bookings_field_duration'] * $product->get_duration();
-		} else {
-			$interval = $product->get_duration();
-		}
-		$min_duration     = $product->get_min_duration();
-
-
-      $first_block_time     = $product->get_first_block_time();
-		
-      $base_interval = $product->get_duration();
-
-      $intervals        = array( $min_duration * $base_interval, $base_interval );
-      $timestamp = strtotime( "{2021}-{01}-{04}" );
-
-		$from                 = strtotime( $first_block_time ? $first_block_time : 'midnight', $timestamp );
-      $standard_from        = $from;
-
-		$resource_id_to_check = ( ! empty( $posted['wc_bookings_field_resource'] ) ? $posted['wc_bookings_field_resource'] : 0 );
-      $to = strtotime( '+ 1 day', $standard_from ) + $interval;
-      $to                   = strtotime( 'midnight', $to ) - 1;
-
-
-      echo ("Duration of course " . $product->get_id()   .  " = "  . $interval . " hours <br>");
-      echo ("First block time = " . $bookieInit->get_first_block_time());
-      echo ("<br>");
-      echo ("<br>");
-      echo ("<br>");
-
-      // foreach
-   //    $cartItems[] = array(
-   //       'id' => $cart_item_two['data']->get_id(),
-   //       'quantity' => $cart_item_two['quantity'],
-   //   );
-
-
-}
 
 
 ?>
