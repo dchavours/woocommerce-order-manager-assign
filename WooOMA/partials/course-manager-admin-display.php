@@ -147,8 +147,10 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
       <p>Enter Course:</p> 
   <select name="courseName" id="courseNameId">
   <?php foreach ( WC_Bookings_Admin::get_booking_products() as $product ) : ?>
-								<option value="<?php echo esc_attr( $product->get_id() ); ?>"><?php echo esc_html( sprintf( '%s (#%s)', $product->get_name(), $product->get_id() ) ); ?></option>
-		<?php endforeach; ?>
+
+	<option value="<?php echo esc_attr( $product->get_id() ); ?>"><?php echo esc_html( sprintf( '%s (#%s)', $product->get_name(), $product->get_id() ) ); ?></option>
+ 
+  <?php endforeach; ?>
   </select>
   <h1>&nbsp;</h1>
 
@@ -157,41 +159,35 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
  <p>Enter Begining Hours:</p> 
   
 
-
   <select name="courseName" id="courseNameId">
   <?php foreach (match_pm_or_am($array_unique_time_starts_no_repeats) as $hour_end ) : ?>
-								<option value="<?php echo $hour_end; ?>"><?php echo $hour_end; ?></option>
-		<?php endforeach; ?>
+
+	<option value="<?php echo $hour_end; ?>"><?php echo $hour_end; ?></option>
+
+  <?php endforeach; ?>
   </select>
-
-
-
-
-
 
 
   <p>Enter Ending Hours:</p> 
+
   <select name="courseName" id="courseNameId">
   <?php foreach (match_pm_or_am($array_unique_time_ends_no_repeats ) as $hour_end ) : ?>
-								<option value="<?php echo $hour_end; ?>"><?php echo $hour_end; ?></option>
-		<?php endforeach; ?>
+
+	<option value="<?php echo $hour_end; ?>"><?php echo $hour_end; ?></option>
+ 
+  <?php endforeach; ?>
   </select>
 
-
   <h1>&nbsp;</h1>
-
-
-
   
-
   <input type ="submit">
-  </form>
+</form>
 
 
 <h1>&nbsp;</h1>
 
 
-	<?
+<?
 
 
 
