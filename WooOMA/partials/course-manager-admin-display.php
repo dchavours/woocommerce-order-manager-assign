@@ -145,7 +145,7 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
       <input name="date" type = "text" id = "datepicker-13">
       <h1>&nbsp;</h1>
       <p>Enter Course:</p> 
-  <select name="courseName" id="courseNameId">
+  <select name="course_name" id="courseNameId">
   <?php foreach ( WC_Bookings_Admin::get_booking_products() as $product ) : ?>
 
 	<option value="<?php echo esc_attr( $product->get_id() ); ?>"><?php echo esc_html( sprintf( '%s (#%s)', $product->get_name(), $product->get_id() ) ); ?></option>
@@ -194,7 +194,7 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
 
 global $wpdb;
  
-if(isset($_POST["date"]) && isset($_POST["courseName"])){
+if(isset($_POST["date"]) && isset($_POST["course_name"])){
 
 
   $array_unique_time_unit = $_POST['date'];
@@ -217,7 +217,7 @@ if(isset($_POST["date"]) && isset($_POST["courseName"])){
 
 
 
-  $courseName = $_POST['courseName'];
+  $courseName = $_POST['course_name'];
 
 
 ?><div>You searched for <?php  ?> and we found... <?php 
@@ -245,8 +245,73 @@ $customer_emails = $wpdb->get_col("
 ");
 
 
+$customer_emails = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_billing_email' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
+");
 
-// People who have purchased that course.
+
+
+$customer_phone = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_billing_phone' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
+");
+
+
+
+
+
+
+
+$customer_booking_start = $wpdb->get_col("
+   SELECT DISTINCT FROM {$wpdb->posts} AS p
+   AND p.meta_key IN ( '_booking_start' )
+   AND p.meta_key IN ( '_product_id', '_variation_id' )
+   AND p.meta_value = $product_id
+");
+
+
+
+$customer_booking_end = $wpdb->get_col("
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_booking_end' )
+   AND im.meta_value = $product_id
+");
+
+
+// _payment_method_title
+
+$payment_method_title = $wpdb->get_col("
+   SELECT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   AND pm.meta_key IN ( '_payment_method_title' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
+");
+
+
+
+
+
+
 
 echo "People who have purchased the course: " . $product_id . " ";
 // Print array on screen
