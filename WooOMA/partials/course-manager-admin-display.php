@@ -136,11 +136,12 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
 
 
 // get all values of 8845
-$all_8814_sql = "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id = '8845'";
-$all_array_8814 = $wpdb->get_results($all_8814_sql, ARRAY_A);
+// 8845 ordered 8813
+$all_8845_sql = "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id = '8845'";
+$all_array_8845 = $wpdb->get_results($all_8845_sql, ARRAY_A);
 
 
-print_r($all_array_8814);
+print_r($all_array_8845);
 
 
 ?>
