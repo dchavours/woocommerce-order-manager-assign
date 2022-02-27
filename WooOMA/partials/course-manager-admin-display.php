@@ -135,6 +135,12 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
 
 
 
+// get all values of 8845
+$all_8814_sql = "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id = '8845'";
+$all_array_8814 = $wpdb->get_results($all_8814_sql, ARRAY_A);
+
+
+print_r($all_array_8814);
 
 
 ?>
@@ -275,12 +281,22 @@ $customer_phone = $wpdb->get_col("
 
 
 
+
 $customer_booking_start = $wpdb->get_col("
-   SELECT DISTINCT FROM {$wpdb->posts} AS p
-   AND p.meta_key IN ( '_booking_start' )
-   AND p.meta_key IN ( '_product_id', '_variation_id' )
-   AND p.meta_value = $product_id
+   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+   AND pm.meta_key IN ( '_booking_start' )
+   AND im.meta_key IN ( '_product_id', '_variation_id' )
+   AND im.meta_value = $product_id
 ");
+
+
+
+
+
 
 
 
