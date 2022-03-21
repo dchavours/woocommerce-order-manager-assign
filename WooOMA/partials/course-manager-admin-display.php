@@ -143,40 +143,32 @@ var_dump($all_array_8810);
 
 
 
-$sql_func_rand = array(0, 1, 2, 3);
+
 
 
 
 function solo_post_id_for_booking_8810($arrayParam2){
 // Ok so the first loop is going to loop through all nodes first on the first-level.
-foreach ( $arrayParam2 as $arrayThing ) {
-  echo $arrayThing;
- 
+	foreach ( $arrayParam2 as $arrayThing ) {
+		
+		$new_array[] = $arrayThing["post_id"];	
+		
+		echo $arrayThing["post_id"];
+		echo '<br>';
 
-}
+
+	}
+	
+	return $new_array;
+	
 }
 
+
+// I'm getting a null value because the function doesn't have a return value. 
 var_dump(solo_post_id_for_booking_8810($all_array_8810));
 
 
-$colors = array("red", "green", "blue", "yellow"); 
 
-function loopForEach($paramColors){
-	
-	foreach ($paramColors as $value) {
-
-		$new_array[] = $value;
-
-		echo "$value <br>";
-	
-	}
-	return $new_array;
-}
-
-
-loopForEach($colors);
-
-var_dump(loopForEach($colors));
 
 ?>
 
