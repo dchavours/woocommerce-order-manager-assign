@@ -38,9 +38,6 @@
 // Start booking_start
 global $wpdb;
 
-$all_booking_starts_sql_command = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_start'";
-$all_booking_starts_row = $wpdb->get_results($all_booking_starts_sql_command, ARRAY_A);
-
 
 // This runs a query and gets the wholestart times but it's just one big string that's in in this array 
 // and also they're not unique because they're all the times. 
@@ -49,8 +46,9 @@ $all_booking_starts_row = $wpdb->get_results($all_booking_starts_sql_command, AR
 function fill_all_booking_times($arrayParam){
 
 	foreach($arrayParam as $booking_start ){
-		$search_for_date = $booking_start['meta_value'];
-		$all_booking_times[] = $search_for_date;
+
+
+		$all_booking_times[] = $booking_start['meta_value'];
 	}
 
   return $all_booking_times;
@@ -133,53 +131,52 @@ $all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_
 $array_unique_time_ends = array_unique(fill_all_booking_times($all_booking_ends_row));
 $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_time_ends));
 
-
-
-// get all values of 8845
-// 8845 ordered 8813
-$all_8845_sql = "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id = '8845'";
-$all_array_8845 = $wpdb->get_results($all_8845_sql, ARRAY_A);
+// Start booking find logic
+$all_8810_sql_command = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_product_id' AND meta_value = '8810' ";
+$all_array_8810 = $wpdb->get_results($all_8810_sql_command, ARRAY_A);
 
 
 
 
 
+var_dump($all_array_8810);
 
 
-//var_dump($all_array_8845);
 
-function sqlFunc(){
-global $wpdb;
+$sql_func_rand = array(0, 1, 2, 3);
 
-$all_8810_booking_sql = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_product_id' AND 
-meta_value = '8810' ";
-return $wpdb->get_results($all_8810_booking_sql, ARRAY_A);
 
+
+function solo_post_id_for_booking_8810($arrayParam2){
+// Ok so the first loop is going to loop through all nodes first on the first-level.
+foreach ( $arrayParam2 as $arrayThing ) {
+  echo $arrayThing;
+ 
+
+}
+}
+
+var_dump(solo_post_id_for_booking_8810($all_array_8810));
+
+
+$colors = array("red", "green", "blue", "yellow"); 
+
+function loopForEach($paramColors){
+	
+	foreach ($paramColors as $value) {
+
+		$new_array[] = $value;
+
+		echo "$value <br>";
+	
+	}
+	return $new_array;
 }
 
 
-var_dump(sqlFunc());
+loopForEach($colors);
 
-
-
-function returnString(){
-
-	$string = 'This is a string';
-	return $string;
-
-}
-
-echo returnString();
-
-
-
-
-
-
-
-
-
-
+var_dump(loopForEach($colors));
 
 ?>
 
