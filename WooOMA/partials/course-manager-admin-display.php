@@ -168,21 +168,21 @@ function solo_post_id_for_booking_8810($arrayParam2){
 var_dump(solo_post_id_for_booking_8810($all_array_8810));
 
 
-// This function is going to take all of the post ids returned from solo_post_id_for_booking_8810 put a comma in between it and have it be the variable added to a sql statement for 
-// where to search so the row can be returned and the parent can be found. 
-function implode_string_array($arrayParam3){
+$ids = implode(', ', $all_array_8810);
+
+var_dump($ids);
+
+$sql_parent_array = 'SELECT post_parent FROM wp_posts WHERE ID IN ('.$ids.')';
+
+$parent_array_return_8810 = $wpdb->get_results($all_8810_sql_command, ARRAY_A);
+
+var_dump($parent_array_return_8810);
+
+$sql_parent_array_plain ='SELECT post_parent FROM wp_posts WHERE ID IN (8835,8856,8884,8890,8896,8906,8908,8910,8915,8930,8932,8936,8949,8975,8981,8983,8985,8987)';
 
 
-}
-
-
-
-
-
-
-
-
-
+$parent_array_return_8810 = $wpdb->get_results($sql_parent_array_plain, ARRAY_A);
+var_dump($parent_array_return_8810);
 
 
 
