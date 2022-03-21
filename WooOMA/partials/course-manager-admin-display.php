@@ -168,6 +168,28 @@ function solo_post_id_for_booking_8810($arrayParam2){
 var_dump(solo_post_id_for_booking_8810($all_array_8810));
 
 
+// This function is going to take all of the post ids returned from solo_post_id_for_booking_8810 put a comma in between it and have it be the variable added to a sql statement for 
+// where to search so the row can be returned and the parent can be found. 
+function implode_string_array($arrayParam3){
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ?>
