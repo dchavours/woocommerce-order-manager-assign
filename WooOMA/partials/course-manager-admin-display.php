@@ -141,7 +141,44 @@ $all_8845_sql = "SELECT * FROM {$wpdb->prefix}postmeta WHERE post_id = '8845'";
 $all_array_8845 = $wpdb->get_results($all_8845_sql, ARRAY_A);
 
 
-print_r($all_array_8845);
+
+
+
+
+
+//var_dump($all_array_8845);
+
+function sqlFunc(){
+global $wpdb;
+
+$all_8810_booking_sql = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_product_id' AND 
+meta_value = '8810' ";
+return $wpdb->get_results($all_8810_booking_sql, ARRAY_A);
+
+}
+
+
+var_dump(sqlFunc());
+
+
+
+function returnString(){
+
+	$string = 'This is a string';
+	return $string;
+
+}
+
+echo returnString();
+
+
+
+
+
+
+
+
+
 
 
 ?>
@@ -228,6 +265,15 @@ if(isset($_POST["date"]) && isset($_POST["course_name"])){
 
 
 ?><div>You searched for <?php  ?> and we found... <?php 
+
+ 
+echo '508';
+ print_r( wc_get_is_paid_statuses());
+ var_dump(wc_get_is_paid_statuses());
+
+
+
+
 
 $product_id = $courseName;
 
