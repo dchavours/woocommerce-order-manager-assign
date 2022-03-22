@@ -183,6 +183,32 @@ var_dump($parent_array_return_8810);
 
 
 
+function pair_parent_with_child($array_wp_posts,$array_wp_meta){
+
+	
+	
+	
+	for ($i = 0; $i < count($array_wp_posts); $i++) {
+	
+		echo $array_wp_posts[$i] . " bought " . $array_wp_meta[$i]["post_parent"] . "<br><br>";
+	
+	}
+
+
+
+
+
+
+//	print_r($array_wp_meta);
+//	foreach ( $array_wp_posts as $array_wp_post ) {
+
+//		echo "<br>" . $array_wp_post . " bought: " . "<br>" ; 
+//
+//	}
+}
+
+pair_parent_with_child(solo_post_id_for_booking_8810($all_array_8810), $parent_array_return_8810 );
+
 
 
 
