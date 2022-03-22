@@ -131,32 +131,27 @@ $all_booking_ends_row = $wpdb->get_results($all_booking_ends_sql_command, ARRAY_
 $array_unique_time_ends = array_unique(fill_all_booking_times($all_booking_ends_row));
 $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_time_ends));
 
-// Start booking find logic
-$all_8810_sql_command = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_product_id' AND meta_value = '8810' ";
+
+// Start booking find logici
+
+
+// This going into wp_postmeta and looks through the column of meta_key for the value of every booking customer who booked 8810.
+$all_8810_sql_command = "SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_product_id' AND meta_value = '8810' ";
+// These are all the booking ids of people who bought 8810. So I should use these to go back into postmeta and extrace the booking_start
 $all_array_8810 = $wpdb->get_results($all_8810_sql_command, ARRAY_A);
-
-
-
-
-
 var_dump($all_array_8810);
 
+var_dump(implode(', ', $all_array_8810 ));
 
 
 
-
-
+// This functin can be by passed by just knowing how to iterate through $all_array_8810. A function is unnecessary.
 
 function solo_post_id_for_booking_8810($arrayParam2){
 // Ok so the first loop is going to loop through all nodes first on the first-level.
 	foreach ( $arrayParam2 as $arrayThing ) {
 		
 		$new_array[] = $arrayThing["post_id"];	
-		
-		echo $arrayThing["post_id"];
-		echo '<br>';
-
-
 	}
 	
 	return $new_array;
@@ -164,47 +159,49 @@ function solo_post_id_for_booking_8810($arrayParam2){
 }
 
 
+
+
+
 // I'm getting a null value because the function doesn't have a return value. 
 var_dump(solo_post_id_for_booking_8810($all_array_8810));
 
 
 $ids = implode(', ',  solo_post_id_for_booking_8810($all_array_8810));
-
-
-
 var_dump($ids);
 
-$sql_parent_array = 'SELECT post_parent FROM wp_posts WHERE ID IN ('.$ids.')';
 
+
+// This finds the parent_post for the booking,
+$sql_parent_array = 'SELECT post_parent, post_date,post_status, post_name, post_type FROM wp_posts WHERE ID IN ('.$ids.')';
 $parent_array_return_8810 = $wpdb->get_results($sql_parent_array, ARRAY_A);
-
 var_dump($parent_array_return_8810);
 
 
 
 
-function pair_parent_with_child($array_wp_posts,$array_wp_meta){
+// The function that I'm going 
+//
+// Has to search in every row where the post id  
 
+
+$sql_find_child_booking ='SELECT meta_key, meta_value  FROM wp_postmeta WHERE post_id IN ('.$ids.') ';
+$sql_find_child_booking_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A);
+var_dump( $sql_find_child_booking_array); 
+
+
+
+
+
+function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2){
 	
+
+
+	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
 	
-	
-	for ($i = 0; $i < count($array_wp_posts); $i++) {
-	
-		echo $array_wp_posts[$i] . " bought " . $array_wp_meta[$i]["post_parent"] . "<br><br>";
-	
+		echo $array_wp_postmeta_child[$i] . " bought " . $array_wp_posts_2[$i]["post_parent"] . " he or she paid with ";
 	}
 
 
-
-
-
-
-//	print_r($array_wp_meta);
-//	foreach ( $array_wp_posts as $array_wp_post ) {
-
-//		echo "<br>" . $array_wp_post . " bought: " . "<br>" ; 
-//
-//	}
 }
 
 pair_parent_with_child(solo_post_id_for_booking_8810($all_array_8810), $parent_array_return_8810 );
