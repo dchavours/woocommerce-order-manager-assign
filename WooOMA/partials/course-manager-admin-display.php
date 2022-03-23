@@ -134,44 +134,34 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
 
 // Start booking find logici
 
-
 // This going into wp_postmeta and looks through the column of meta_key for the value of every booking customer who booked 8810.
 $all_8810_sql_command = "SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_product_id' AND meta_value = '8810' ";
 // These are all the booking ids of people who bought 8810. So I should use these to go back into postmeta and extrace the booking_start
 $all_array_8810 = $wpdb->get_results($all_8810_sql_command, ARRAY_A);
 var_dump($all_array_8810);
 
-var_dump(implode(', ', $all_array_8810 ));
 
 
 
-// This functin can be by passed by just knowing how to iterate through $all_array_8810. A function is unnecessary.
 
+// This function reduces the $all_array_8810 array depth by one
 function solo_post_id_for_booking_8810($arrayParam2){
-// Ok so the first loop is going to loop through all nodes first on the first-level.
-	foreach ( $arrayParam2 as $arrayThing ) {
-		
+	foreach ( $arrayParam2 as $arrayThing ) {	
 		$new_array[] = $arrayThing["post_id"];	
 	}
-	
 	return $new_array;
-	
 }
-
-
-
-
-
-// I'm getting a null value because the function doesn't have a return value. 
 var_dump(solo_post_id_for_booking_8810($all_array_8810));
 
 
+
+// This takes all the ids who bought 8810 reduces it to a string for a subsequent sql statement query. 
 $ids = implode(', ',  solo_post_id_for_booking_8810($all_array_8810));
 var_dump($ids);
 
 
 
-// This finds the parent_post for the booking,
+// This sql query finds the parent_post for the booking,
 $sql_parent_array = 'SELECT post_parent, post_date,post_status, post_name, post_type FROM wp_posts WHERE ID IN ('.$ids.')';
 $parent_array_return_8810 = $wpdb->get_results($sql_parent_array, ARRAY_A);
 var_dump($parent_array_return_8810);
@@ -183,13 +173,10 @@ var_dump($parent_array_return_8810);
 //
 // Has to search in every row where the post id  
 
-
+// This sql query outputs the meta_data for the child posts of the wooCommerce post that documented that payment. 
 $sql_find_child_booking ='
-
-
 SELECT meta_key, meta_value  FROM wp_postmeta WHERE post_id IN ('.$ids.')
 AND meta_key NOT IN 
-
 ( "_edit_lock", "rs_page_bg_color", "_wc_bookings_gcalendar_event_id", "_booking_resource_id", "_booking_customer_id", "_booking_parent_id","_booking_all_day","_booking_cost","_booking_order_item_id","_booking_persons","_booking_product_id","_local_timezone","_edit_last")
 ';
 $sql_find_child_booking_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A);
@@ -197,6 +184,8 @@ $sql_find_child_booking_array = $wpdb->get_results($sql_find_child_booking,  ARR
 
 // This var_dump is from the post_meta table. It outputs the meta data for the child posts of the wooCommerce post that documented that payment. 
 // If I do this right I should be able to oh display booking under score start next to the one I originally started with. 
+// I use this for checking the booking_start & booking_start of a selected product.  
+// Technically, I just add this to the below logic images work . Because it's gonna bring back 8835 now. 
 var_dump( $sql_find_child_booking_array); 
 
 
@@ -204,15 +193,9 @@ var_dump( $sql_find_child_booking_array);
 
 
 function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2){
-	
-
-
 	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
-	
 		echo $array_wp_postmeta_child[$i] . " bought " . $array_wp_posts_2[$i]["post_parent"] . " he or she paid with ";
 	}
-
-
 }
 
 pair_parent_with_child(solo_post_id_for_booking_8810($all_array_8810), $parent_array_return_8810 );
@@ -326,6 +309,7 @@ $statuses = array_map( 'esc_sql', wc_get_is_paid_statuses() );
 
 
 
+
 $customer_emails = $wpdb->get_col("
    SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
@@ -364,38 +348,14 @@ $customer_phone = $wpdb->get_col("
 
 
 
+// Creating scaffolding to output booking_start 
+// It needs to be a two dimensional array where it says their (email or name) and a level below that it says their booking_start and their booking_end
+// so whenever the search form types in 8810 it's going to return the following after a few functions and then it's going to say 88358856890 and those are all the corresponding wooCommerce booking meta_data information
+// Because this cannot simply run one SQL it runs an SQL statement it goes to a function statement another function to have the logic up there. 
 
 
+// Place future function here, replacing 8810 with a parameter value. 
 
-
-
-$customer_booking_start = $wpdb->get_col("
-   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
-   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
-   AND pm.meta_key IN ( '_booking_start' )
-   AND im.meta_key IN ( '_product_id', '_variation_id' )
-   AND im.meta_value = $product_id
-");
-
-
-
-
-
-
-
-
-$customer_booking_end = $wpdb->get_col("
-   SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
-   INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
-   INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-   WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
-   AND pm.meta_key IN ( '_booking_end' )
-   AND im.meta_value = $product_id
-");
 
 
 // _payment_method_title
