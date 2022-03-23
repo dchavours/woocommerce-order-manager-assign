@@ -184,12 +184,19 @@ var_dump($parent_array_return_8810);
 // Has to search in every row where the post id  
 
 
-$sql_find_child_booking ='SELECT meta_key, meta_value  FROM wp_postmeta WHERE post_id IN ('.$ids.') 
-AND meta_key NOT IN ( "_edit_lock", "rs_page_bg_color", "_wc_bookings_gcalendar_event_id", "_booking_resource_id", "_booking_customer_id", "_booking_parent_id")
+$sql_find_child_booking ='
 
-	
+
+SELECT meta_key, meta_value  FROM wp_postmeta WHERE post_id IN ('.$ids.')
+AND meta_key NOT IN 
+
+( "_edit_lock", "rs_page_bg_color", "_wc_bookings_gcalendar_event_id", "_booking_resource_id", "_booking_customer_id", "_booking_parent_id","_booking_all_day","_booking_cost","_booking_order_item_id","_booking_persons","_booking_product_id","_local_timezone","_edit_last")
 ';
 $sql_find_child_booking_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A);
+
+
+// This var_dump is from the post_meta table. It outputs the meta data for the child posts of the wooCommerce post that documented that payment. 
+// If I do this right I should be able to oh display booking under score start next to the one I originally started with. 
 var_dump( $sql_find_child_booking_array); 
 
 
