@@ -406,7 +406,7 @@ var_dump( $sql_find_child_booking_array);
 
 function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2){
 	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
-		echo $array_wp_postmeta_child[$i] . " bought " . $array_wp_posts_2[$i]["post_parent"] . " he or she paid with ";
+		echo $array_wp_postmeta_child[$i] . "-wcb & " . $array_wp_posts_2[$i]["post_parent"]. "-wc,  he or she bought " , "" . " and paid with " . "<br><br>";
 	}
 }
 
