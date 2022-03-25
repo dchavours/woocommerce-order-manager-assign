@@ -237,6 +237,8 @@ var_dump($courseName);
 $statuses = array_map( 'esc_sql', wc_get_is_paid_statuses() );
 
 
+echo "<h2>" . $product_id .  "</h2> ";
+
 
 
 $customer_emails = $wpdb->get_col("
@@ -404,13 +406,22 @@ var_dump( $sql_find_child_booking_array);
 
 
 
-function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2){
+function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2, $product_id){
+
+
 	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
-		echo $array_wp_postmeta_child[$i] . "-wcb & " . $array_wp_posts_2[$i]["post_parent"]. "-wc,  he or she bought " , "" . " and paid with " . "<br><br>";
+
+		if( $array_wp_posts_2[$i]["post_parent"] == 0 ){
+			echo $array_wp_postmeta_child[$i] . " did not buy " . $product_id . "<br><br>"; 
+		}
+		else{
+			echo $array_wp_postmeta_child[$i] . "-wcb & " . $array_wp_posts_2[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
+		}
 	}
+
 }
 
-pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return );
+pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id );
 
 
 
