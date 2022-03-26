@@ -280,7 +280,7 @@ $customer_phone = $wpdb->get_col("
 
 
 // Creating scaffolding to output booking_start 
-// It needs to be a two dimensional array where it says their (email or name) and a level below that it says their booking_start and their booking_end
+// It needs to be a two imensional array where it says their (email or name) and a level below that it says their booking_start and their booking_end
 // so whenever the search form types in 8810 it's going to return the following after a few functions and then it's going to say 88358856890 and those are all the corresponding wooCommerce booking meta_data information
 // Because this cannot simply run one SQL it runs an SQL statement it goes to a function statement another function to have the logic up there. 
 
@@ -355,11 +355,6 @@ $booking_product_id_sql_cmd = "SELECT post_id FROM {$wpdb->prefix}postmeta WHERE
 $array_booking_product_id_sql_cmd =$wpdb->get_results( $booking_product_id_sql_cmd, ARRAY_A);
 var_dump($array_booking_product_id_sql_cmd);
 
-
-// old: $all_8810_sql_command 
-// new: $booking_product_id_sql_cmd
-
-
 // Is there any data loss in this transition?
 function reduce_sql_array_by_one_dimension($arrayParam2){
 	foreach ( $arrayParam2 as $arrayThing ) {
@@ -393,38 +388,76 @@ SELECT meta_key, meta_value  FROM wp_postmeta WHERE post_id IN ('.$ids.')
 AND meta_key NOT IN
 ( "_edit_lock", "rs_page_bg_color", "_wc_bookings_gcalendar_event_id", "_booking_resource_id", "_booking_customer_id", "_booking_parent_id","_booking_all_day","_booking_cost","_booking_order_item_id","_booking_persons","_booking_product_id","_local_timezone","_edit_last")
 ';
-$sql_find_child_booking_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A);
+$sql_find_child_wcb_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A);
 
 
 // This var_dump is from the post_meta table. It outputs the meta data for the child posts of the wooCommerce post that documented that payment.
 // If I do this right I should be able to oh display booking under score start next to the one I originally started with.
 // I use this for checking the booking_start & booking_start of a selected product.
 // Technically, I just add this to the below logic images work . Because it's gonna bring back 8835 now.
-var_dump( $sql_find_child_booking_array);
 
+
+
+
+
+
+
+
+// Focusing on this, my goal is to replace it with a foor loop.
+var_dump( $sql_find_child_wcb_array);
+
+
+
+
+// This is going to take in 2 arrays as well as $product_id
+function array_level_output($wcb_meta_data_info){
+	for ($i = 0; $i < count($wcb_meta_data_info); $i++) {
+	  echo  $wcb_meta_data_info[$i]["meta_key"] . ": "  .   $wcb_meta_data_info[$i]["meta_value"] .  " 511 <br><br>" ;
+
+	}
+}
+array_level_output($sql_find_child_wcb_array);
 
 
 
 
 function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2, $product_id){
 
+	$valid_wc_and_wcb_id = array();
 
 	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
-
 		if( $array_wp_posts_2[$i]["post_parent"] == 0 ){
 			echo $array_wp_postmeta_child[$i] . " did not buy " . $product_id . "<br><br>"; 
 		}
 		else{
+
+			$valid_wc_and_wcb_id = ($array_wp_postmeta_child[$i] => "Some value.");
 			echo $array_wp_postmeta_child[$i] . "-wcb & " . $array_wp_posts_2[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
 		}
 	}
-
+	return $valid_wc_and_wcb_id;
 }
+
+
+var_dump(pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id ));
+
+
 
 pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id );
 
 
 
+
+function serialize(){
+
+
+$ser = serialize($full_output_array);//if you dump $ser, you'll see it's a string
+$file = fopen('../../file.ser', 'wb');
+fwrite($file, $ser); 
+
+
+
+}
 
 
 
