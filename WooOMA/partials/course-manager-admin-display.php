@@ -17,13 +17,12 @@
 $dir = WP_PLUGIN_DIR . '/woocommerce-order-manager-assign';
 
 
-$serialize_output_file = $dir . '/local-machine-path.php';
-
+$serialize_output_file = $dir . '/local-machine-path.txt';
 
 if ( file_exists($serialize_output_file)) {
 	echo "It exists";
 } else {
-	fopen($dir . '/local-machine-path.php', "w");
+	fopen($dir . '/local-machine-path.txt', "w");
 }
 
 
