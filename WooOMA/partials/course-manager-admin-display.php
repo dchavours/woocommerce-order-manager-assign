@@ -17,12 +17,16 @@
 $dir = WP_PLUGIN_DIR . '/woocommerce-order-manager-assign';
 
 
-var_dump($dir);
-
-include $dir . '/local-machine-path.php';
+$serialize_output_file = $dir . '/local-machine-path.php';
 
 
-var_dump($local_machine_path );
+if ( file_exists($serialize_output_file)) {
+	echo "It exists";
+} else {
+	fopen($dir . '/local-machine-path.php', "w");
+}
+
+
  
 ?>
 
@@ -461,27 +465,13 @@ pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_
 
 
 
+// I am going to serialize to the file I checked for/create above. 
+// Then on my "local machine" I am going to run logic against it referencing
+// the plugin folder. 
 
-function serialize(){
-
-
-$ser = serialize($full_output_array);//if you dump $ser, you'll see it's a string
-$file = fopen('../../file.ser', 'wb');
+$ser = serialize($array_booking_product_id_sql_cmd);
+$file = fopen(("$serialize_output_file"), 'wb');
 fwrite($file, $ser); 
-
-
-
-}
-function unserialize(){
-
-}
-
-
-
-
-
-
-
 
 
 
