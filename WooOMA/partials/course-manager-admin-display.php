@@ -12,8 +12,20 @@
  * @subpackage Course_Manager/admin/partials
  */
 
+
+
+$dir = WP_PLUGIN_DIR . '/woocommerce-order-manager-assign';
+
+
+var_dump($dir);
+
+include $dir . '/local-machine-path.php';
+
+
+var_dump($local_machine_path );
  
 ?>
+
 
 
 
@@ -423,7 +435,8 @@ array_level_output($sql_find_child_wcb_array);
 
 function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2, $product_id){
 
-	$valid_wc_and_wcb_id = array();
+	$valid_wc_and_wcb_id = array("value" => 4);
+
 
 	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
 		if( $array_wp_posts_2[$i]["post_parent"] == 0 ){
@@ -431,7 +444,8 @@ function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2, $pro
 		}
 		else{
 
-			$valid_wc_and_wcb_id = ($array_wp_postmeta_child[$i] => "Some value.");
+			
+			//$valid_wc_and_wcb_id = ($array_wp_postmeta_child[$i] => "Some value.");
 			echo $array_wp_postmeta_child[$i] . "-wcb & " . $array_wp_posts_2[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
 		}
 	}
@@ -458,7 +472,9 @@ fwrite($file, $ser);
 
 
 }
+function unserialize(){
 
+}
 
 
 
