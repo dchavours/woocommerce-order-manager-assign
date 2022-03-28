@@ -459,7 +459,7 @@ array_level_output($sql_find_child_wcb_array);
 
 /**
  * pair_parent_with_child - This function correlates the wcb purcahse id with the wc purchase id. As well as filtering out entries that have a wcb but not a wc. 
- * 
+ * - This needs to return an array with relevant information.  
  * @param mixed $array_wp_postmeta_child 
  * @param mixed $array_wp_posts_2 
  * @param mixed $product_id 
@@ -468,21 +468,24 @@ array_level_output($sql_find_child_wcb_array);
  */
 function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2, $product_id){
 
-	$valid_wc_and_wcb_id = array("value" => 4);
-
+	
+	$wc_purchase_ids = array();
 
 	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
 		if( $array_wp_posts_2[$i]["post_parent"] == 0 ){
 			echo $array_wp_postmeta_child[$i] . " did not buy " . $product_id . "<br><br>"; 
 		}
-		else{
+		else{	
 
-			
+		
+		
+	        	 $wc_purchase_ids[] = $array_wp_posts_2[$i]["post_parent"];
+	
 			//$valid_wc_and_wcb_id = ($array_wp_postmeta_child[$i] => "Some value.");
 			echo $array_wp_postmeta_child[$i] . "-wcb & " . $array_wp_posts_2[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
 		}
 	}
-	return $valid_wc_and_wcb_id;
+	return $wc_purchase_ids;
 }
 
 
