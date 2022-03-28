@@ -17,12 +17,12 @@
 $dir = WP_PLUGIN_DIR . '/woocommerce-order-manager-assign';
 
 
-$serialize_output_file = $dir . '/local-machine-path.txt';
+$serialize_output_file = $dir . '/local-machine-path.json';
 
 if ( file_exists($serialize_output_file)) {
 	echo "It exists";
 } else {
-	fopen($dir . '/local-machine-path.txt', "w");
+	fopen($dir . '/local-machine-path.json', "w");
 }
 
 
@@ -50,14 +50,19 @@ if ( file_exists($serialize_output_file)) {
 
 <?php
 
-// Start booking_start
 global $wpdb;
 
-
-// This runs a query and gets the wholestart times but it's just one big string that's in in this array 
-// and also they're not unique because they're all the times. 
-// so there's multiple strings repeating it within the all_booking_begins arrray below should 
-// be changed anywaysbecause it's supposed to be agnostic towards booking times.
+// Start booking_start logic.
+/**
+ * fill_all_booking_times - This runs a query and gets the wholestart times but it's just one big string that's in in this array 
+ * 			    and also they're not unique because they're all the times. 
+ * 			    so there's multiple strings repeating it within the all_booking_begins arrray below should 
+ * 			    be changed anywaysbecause it's supposed to be agnostic towards booking times.
+ * 
+ * @param mixed $arrayParam 
+ * @access public
+ * @return void
+ */
 function fill_all_booking_times($arrayParam){
 
 	foreach($arrayParam as $booking_start ){
@@ -72,10 +77,16 @@ function fill_all_booking_times($arrayParam){
 
 
 
-
-// This function takes the large string that includes 
-// the days in the months and puts it into units that can be used better.
-// Also used to delineate hours.
+/**
+ * turn_into_units - This function takes the large string that includes 
+ * 		     the days in the months and puts it into units that can be used better.
+ * 		     Also used to delineate hours.
+ * 		     Some of the code below is commented out because the only focus atm 
+ * 		     is the hour value.
+ * @param mixed $unicode_full_time_string 
+ * @access public
+ * @return void
+ */
 function turn_into_units($unicode_full_time_string){
 
 	foreach ($unicode_full_time_string as $array_unique_time_unit){
@@ -102,7 +113,13 @@ function turn_into_units($unicode_full_time_string){
 
 
 
-// This function takes the time of strings produced by turn_into_units and decided if its am or pm. 
+/**
+ * match_pm_or_am - This function takes the time of strings produced by turn_into_units and decided if its am or pm. 
+ * 
+ * @param mixed $hour_unit_array 
+ * @access public
+ * @return void
+ */
 function match_pm_or_am($hour_unit_array){
 
 	sort($hour_unit_array);
@@ -205,7 +222,7 @@ $array_unique_time_ends_no_repeats = array_unique(turn_into_units($array_unique_
 
 global $wpdb;
  
-if(isset($_POST["date"]) && isset($_POST["course_name"])){
+if(isset($_POST["date"]) && isset($_POST["course_name"])){ 
 
 
   $array_unique_time_unit = $_POST['date'];
@@ -292,20 +309,6 @@ $customer_phone = $wpdb->get_col("
    AND im.meta_value = $product_id
 ");
 
-
-
-// Creating scaffolding to output booking_start 
-// It needs to be a two imensional array where it says their (email or name) and a level below that it says their booking_start and their booking_end
-// so whenever the search form types in 8810 it's going to return the following after a few functions and then it's going to say 88358856890 and those are all the corresponding wooCommerce booking meta_data information
-// Because this cannot simply run one SQL it runs an SQL statement it goes to a function statement another function to have the logic up there. 
-
-
-// Place future function here, replacing 8810 with a parameter value. 
-
-
-
-// _payment_method_title
-
 $payment_method_title = $wpdb->get_col("
    SELECT pm.meta_value FROM {$wpdb->posts} AS p
    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
@@ -366,11 +369,21 @@ print_r( $payment_method_title );
 // This going into wp_postmeta and looks through the column of meta_key for the value of every booking customer who booked 8810.
 $booking_product_id_sql_cmd = "SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_key = '_booking_product_id' AND meta_value = $product_id ";
 
-// These are all the booking ids of people who bought 8810. So I should use these to go back into postmeta and extrace the booking_start
+
+/**
+ * The variable $array_booking_product_id_sql_cmd takes the sql queued results and turns it into an array. 
+ */
 $array_booking_product_id_sql_cmd =$wpdb->get_results( $booking_product_id_sql_cmd, ARRAY_A);
 var_dump($array_booking_product_id_sql_cmd);
 
-// Is there any data loss in this transition?
+
+/**
+ * reduce_sql_array_by_one_dimension - This function reduces the sql command it takes by one dimension because the sql is queued with one exta dimension we don't need. 
+ * 
+ * @param mixed $arrayParam2 This takes in an Array from $wpdb->get_results.         
+ * @access public
+ * @return void
+ */
 function reduce_sql_array_by_one_dimension($arrayParam2){
 	foreach ( $arrayParam2 as $arrayThing ) {
 		$new_array[] = $arrayThing["post_id"];
@@ -381,23 +394,37 @@ var_dump(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd));
 
 
 
-// This takes all the ids who bought $product_id reduces it to a string for a subsequent sql statement query.
+
+
+
+
+
+
+
+/**
+ * This takes all the ids who bought $product_id reduces it to a string for a subsequent sql statement query
+ * This variable is used to search through wp_posts table.  
+ */
 $ids = implode(', ',  reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd));
 var_dump($ids);
 
 
+/**
+ * This sql query finds the parent_post for the booking, in the table wp_posts
+ *
+ *
+ *
+ */
 
-// This sql query finds the parent_post for the booking,
 $sql_parent_array = 'SELECT post_parent, post_date,post_status, post_name, post_type FROM wp_posts WHERE ID IN ('.$ids.')';
 $parent_post_array_return = $wpdb->get_results($sql_parent_array, ARRAY_A);
 var_dump($parent_post_array_return);
 
 
 
-
-// The function that I'm going
-// Has to search in every row where the post id
-// This sql query outputs the meta_data for the child posts of the wooCommerce post that documented that payment.
+/**
+ * This variable finds the post_purchase_id for all wcb entries. 
+ */
 $sql_find_child_booking ='
 SELECT meta_key, meta_value  FROM wp_postmeta WHERE post_id IN ('.$ids.')
 AND meta_key NOT IN
@@ -406,25 +433,16 @@ AND meta_key NOT IN
 $sql_find_child_wcb_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A);
 
 
-// This var_dump is from the post_meta table. It outputs the meta data for the child posts of the wooCommerce post that documented that payment.
-// If I do this right I should be able to oh display booking under score start next to the one I originally started with.
-// I use this for checking the booking_start & booking_start of a selected product.
-// Technically, I just add this to the below logic images work . Because it's gonna bring back 8835 now.
-
-
-
-
-
-
-
-
-// Focusing on this, my goal is to replace it with a foor loop.
-var_dump( $sql_find_child_wcb_array);
-
-
 
 
 // This is going to take in 2 arrays as well as $product_id
+/**
+ * array_level_output - This function outputs all the booking_starts and booking_ends of $product_id inputted into the search form.  
+ * 
+ * @param mixed $wcb_meta_data_info 
+ * @access public
+ * @return void
+ */
 function array_level_output($wcb_meta_data_info){
 	for ($i = 0; $i < count($wcb_meta_data_info); $i++) {
 	  echo  $wcb_meta_data_info[$i]["meta_key"] . ": "  .   $wcb_meta_data_info[$i]["meta_value"] .  " 511 <br><br>" ;
@@ -436,6 +454,18 @@ array_level_output($sql_find_child_wcb_array);
 
 
 
+
+
+
+/**
+ * pair_parent_with_child - This function correlates the wcb purcahse id with the wc purchase id. As well as filtering out entries that have a wcb but not a wc. 
+ * 
+ * @param mixed $array_wp_postmeta_child 
+ * @param mixed $array_wp_posts_2 
+ * @param mixed $product_id 
+ * @access public
+ * @return void
+ */
 function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2, $product_id){
 
 	$valid_wc_and_wcb_id = array("value" => 4);
@@ -464,14 +494,62 @@ pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_
 
 
 
-// I am going to serialize to the file I checked for/create above. 
-// Then on my "local machine" I am going to run logic against it referencing
-// the plugin folder. 
 
-$ser = serialize($array_booking_product_id_sql_cmd);
-$file = fopen(("$serialize_output_file"), 'wb');
-fwrite($file, $ser); 
+/**
+ * This is the part where I work on writing data to a file. 
+ * To develop scripts elsewhere.
+ *
+ * */
 
+
+
+$bt8836 = array("booking-start" => "20220110180000", "booking-end" => "20220110190000"   );
+
+
+
+$json = json_encode($bt8836); 
+
+
+file_put_contents("target-array-struct.json", $json);
+
+function create_json_file ( $array_param_one){
+	$dir = WP_PLUGIN_DIR . '/woocommerce-order-manager-assign';
+	$target_file = $dir . '/array-struct.json';
+
+
+	// encode array to json
+	$json = json_encode($array_param_one);
+	//display it
+	//generate json file
+	if (!file_exists($target_file)){
+
+			fopen($target_file, "w");
+
+		file_put_contents($target_file, $json);
+	}
+}
+
+
+create_json_file(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id ); 
+
+
+function update_json_file($new_array){
+	
+	// .JSON file
+	$json_file = "array-struct.json";
+
+	// encode array to json
+	$data = file_get_contents($json_file);
+	$data_array = json_decode($data);
+	// At this point it already has the information from the previous array. 
+
+	//array_push($data_array, $new_array);
+	var_dump($data_array);
+	file_put_contents($json_file, json_encode($data_array)  );
+}
+
+
+//update_json_file($full_output_array);
 
 
 
