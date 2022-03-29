@@ -384,8 +384,8 @@ var_dump($array_booking_product_id_sql_cmd);
  * @access public
  * @return void
  */
-function reduce_sql_array_by_one_dimension($arrayParam2){
-	foreach ( $arrayParam2 as $arrayThing ) {
+function reduce_sql_array_by_one_dimension($arrayParam){
+	foreach ( $arrayParam as $arrayThing ) {
 		$new_array[] = $arrayThing["post_id"];
 	}
 	return $new_array;
@@ -443,9 +443,9 @@ $sql_find_child_wcb_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A
  * @access public
  * @return void
  */
-function array_level_output($wcb_meta_data_info){
-	for ($i = 0; $i < count($wcb_meta_data_info); $i++) {
-	  echo  $wcb_meta_data_info[$i]["meta_key"] . ": "  .   $wcb_meta_data_info[$i]["meta_value"] .  " 511 <br><br>" ;
+function array_level_output($sql_find_child_wcb_array){
+	for ($i = 0; $i < count($sql_find_child_wcb_array); $i++) {
+	  echo  $sql_find_child_wcb_array[$i]["meta_key"] . ": "  .   $sql_find_child_wcb_array[$i]["meta_value"] .  " 511 <br><br>" ;
 
 	}
 }
@@ -454,6 +454,22 @@ array_level_output($sql_find_child_wcb_array);
 
 
 
+function split_array_into_twos ($sql_find_child_wcb_array){
+	$split_two_array = array();
+
+	$group_size = 2;
+	$count =  count($sql_find_child_wcb_array); 
+	$number_increment = $count / 2;
+	for ($i = 0; $i < $number_increment;) {
+		$group = array_slice($sql_find_child_wcb_array,$i,2);
+		$split_two_array[] = $group;
+		$i = $i +2;
+	}
+	return $split_two_array;
+}
+
+
+var_dump(split_array_into_twos($sql_find_child_wcb_array));
 
 
 
@@ -466,23 +482,23 @@ array_level_output($sql_find_child_wcb_array);
  * @access public
  * @return void
  */
-function pair_parent_with_child($array_wp_postmeta_child,$array_wp_posts_2, $product_id){
+function pair_parent_with_child($array_wp_postmeta_child, $parent_post_array_return, $product_id){
 
 	
 	$wc_purchase_ids = array();
 
-	for ($i = 0; $i < count($array_wp_posts_2); $i++) {
-		if( $array_wp_posts_2[$i]["post_parent"] == 0 ){
+	for ($i = 0; $i < count($parent_post_array_return); $i++) {
+		if( $parent_post_array_return[$i]["post_parent"] == 0 ){
 			echo $array_wp_postmeta_child[$i] . " did not buy " . $product_id . "<br><br>"; 
 		}
 		else{	
 
 		
 		
-	        	 $wc_purchase_ids[] = $array_wp_posts_2[$i]["post_parent"];
+	        	 $wc_purchase_ids[] = $parent_post_array_return[$i]["post_parent"];
 	
 			//$valid_wc_and_wcb_id = ($array_wp_postmeta_child[$i] => "Some value.");
-			echo $array_wp_postmeta_child[$i] . "-wcb & " . $array_wp_posts_2[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
+			echo $array_wp_postmeta_child[$i] . "-wcb & " . $parent_post_array_return[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
 		}
 	}
 	return $wc_purchase_ids;
@@ -533,10 +549,11 @@ function create_json_file ( $array_param_one){
 }
 
 
+// This is taking multiple params which it shouldn't.
 create_json_file(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id ); 
 
 
-function update_json_file($new_array){
+function update_json_file($full_output_array){
 	
 	// .JSON file
 	$json_file = "array-struct.json";
