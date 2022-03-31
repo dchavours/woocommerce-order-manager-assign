@@ -426,13 +426,14 @@ var_dump($parent_post_array_return);
  * This variable finds the post_purchase_id for all wcb entries. 
  */
 $sql_find_child_booking ='
-SELECT meta_key, meta_value  FROM wp_postmeta WHERE post_id IN ('.$ids.')
+SELECT meta_key, meta_value, post_id  FROM wp_postmeta WHERE post_id IN ('.$ids.')
 AND meta_key NOT IN
 ( "_edit_lock", "rs_page_bg_color", "_wc_bookings_gcalendar_event_id", "_booking_resource_id", "_booking_customer_id", "_booking_parent_id","_booking_all_day","_booking_cost","_booking_order_item_id","_booking_persons","_booking_product_id","_local_timezone","_edit_last")
 ';
 $sql_find_child_wcb_array = $wpdb->get_results($sql_find_child_booking,  ARRAY_A);
 
 
+var_dump($sql_find_child_wcb_array);
 
 
 // This is going to take in 2 arrays as well as $product_id
@@ -454,6 +455,16 @@ array_level_output($sql_find_child_wcb_array);
 
 
 
+/**
+ * split_array_into_twos - Takes the $sql_find_child_wcb_array and returns an array for 
+ * the booking_start and booking_end values. This will hopefully be added on later to the
+ * array of pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id ));
+
+ * 
+ * @param mixed $sql_find_child_wcb_array 
+ * @access public
+ * @return void
+ */
 function split_array_into_twos ($sql_find_child_wcb_array){
 	$split_two_array = array();
 
