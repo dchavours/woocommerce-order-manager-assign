@@ -505,7 +505,7 @@ function pair_parent_with_child($array_wp_postmeta_child, $parent_post_array_ret
 
 		
 		
-	        	 $wc_purchase_ids[] =  $wc_pairings =array( "Parent" =>  $parent_post_array_return[$i]["post_parent"], "Child" => $array_wp_postmeta_child[$i] );
+	        	 $wc_purchase_ids[] =  $wc_pairings =array( "wc" =>  $parent_post_array_return[$i]["post_parent"], "wcb" => $array_wp_postmeta_child[$i] );
 	
 			//$valid_wc_and_wcb_id = ($array_wp_postmeta_child[$i] => "Some value.");
 			//echo $array_wp_postmeta_child[$i] . "-wcb & " . $parent_post_array_return[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
