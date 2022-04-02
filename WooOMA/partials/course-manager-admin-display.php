@@ -494,7 +494,6 @@ var_dump(split_array_into_twos($sql_find_child_wcb_array));
  * @return void
  */
 function pair_parent_with_child($array_wp_postmeta_child, $parent_post_array_return, $product_id){
-
 	
 	$wc_purchase_ids = array();
 
@@ -506,10 +505,10 @@ function pair_parent_with_child($array_wp_postmeta_child, $parent_post_array_ret
 
 		
 		
-	        	 $wc_purchase_ids[] = $parent_post_array_return[$i]["post_parent"];
+	        	 $wc_purchase_ids[] =  $wc_pairings =array( "Parent" =>  $parent_post_array_return[$i]["post_parent"], "Child" => $array_wp_postmeta_child[$i] );
 	
 			//$valid_wc_and_wcb_id = ($array_wp_postmeta_child[$i] => "Some value.");
-			echo $array_wp_postmeta_child[$i] . "-wcb & " . $parent_post_array_return[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
+			//echo $array_wp_postmeta_child[$i] . "-wcb & " . $parent_post_array_return[$i]["post_parent"]. "-wc,  he or she bought " , $product_id . " and paid with " . "<br><br>";
 		}
 	}
 	return $wc_purchase_ids;
@@ -519,8 +518,9 @@ function pair_parent_with_child($array_wp_postmeta_child, $parent_post_array_ret
 var_dump(pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id ));
 
 
+$to_assign_assoc_array = pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id );
 
-pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id );
+
 
 
 
@@ -542,6 +542,8 @@ $json = json_encode($bt8836);
 
 file_put_contents("target-array-struct.json", $json);
 
+
+// This works only once the the file is not in the folder. Basically, cannot update but only start // a new.
 function create_json_file ( $array_param_one){
 	$dir = WP_PLUGIN_DIR . '/woocommerce-order-manager-assign';
 	$target_file = $dir . '/array-struct.json';
@@ -559,28 +561,8 @@ function create_json_file ( $array_param_one){
 	}
 }
 
+create_json_file($to_assign_assoc_array);
 
-// This is taking multiple params which it shouldn't.
-create_json_file(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id ); 
-
-
-function update_json_file($full_output_array){
-	
-	// .JSON file
-	$json_file = "array-struct.json";
-
-	// encode array to json
-	$data = file_get_contents($json_file);
-	$data_array = json_decode($data);
-	// At this point it already has the information from the previous array. 
-
-	//array_push($data_array, $new_array);
-	var_dump($data_array);
-	file_put_contents($json_file, json_encode($data_array)  );
-}
-
-
-//update_json_file($full_output_array);
 
 
 
