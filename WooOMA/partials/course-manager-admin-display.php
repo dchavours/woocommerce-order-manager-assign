@@ -251,9 +251,9 @@ if(isset($_POST["date"]) && isset($_POST["course_name"])){
 ?><div>You searched for <?php  ?> and we found... <?php 
 
  
-//echo '508';
-// print_r( wc_get_is_paid_statuses());
-// var_dump(wc_get_is_paid_statuses());
+echo '508';
+ print_r( wc_get_is_paid_statuses());
+ var_dump(wc_get_is_paid_statuses());
 
 
 
@@ -262,7 +262,7 @@ if(isset($_POST["date"]) && isset($_POST["course_name"])){
 $product_id = $courseName;
 
 
-// var_dump($courseName);
+var_dump($courseName);
 // Select Product ID
 
 // Find billing emails in the DB order table
@@ -331,24 +331,24 @@ echo "<br>";
 echo "Customer Emails:";
 echo "<br>";
 
-//print_r( $customer_emails );
+print_r( $customer_emails );
 echo "<br>";
 echo "Customer Phone:";
 echo "<br>";
 
 
-//print_r( $customer_phone );
+print_r( $customer_phone );
 
 echo "<br>";
 echo "customer_booking_start:";
 echo "<br>";
 
-//print_r( $customer_booking_start );
+print_r( $customer_booking_start );
 
 echo "<br>";
 echo "customer_booking_end:";
 echo "<br>";
-//print_r( $customer_booking_end );
+print_r( $customer_booking_end );
 
 
 
@@ -357,7 +357,7 @@ echo "payment_method_title:";
 echo "<br>";
 
 
-//print_r( $payment_method_title );
+print_r( $payment_method_title );
 
 
 
@@ -374,7 +374,7 @@ $booking_product_id_sql_cmd = "SELECT post_id FROM {$wpdb->prefix}postmeta WHERE
  * The variable $array_booking_product_id_sql_cmd takes the sql queued results and turns it into an array. 
  */
 $array_booking_product_id_sql_cmd =$wpdb->get_results( $booking_product_id_sql_cmd, ARRAY_A);
-//var_dump($array_booking_product_id_sql_cmd);
+var_dump($array_booking_product_id_sql_cmd);
 
 
 /**
@@ -390,7 +390,7 @@ function reduce_sql_array_by_one_dimension($arrayParam){
 	}
 	return $new_array;
 }
-//var_dump(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd));
+var_dump(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd));
 
 
 
@@ -418,7 +418,7 @@ var_dump($ids);
 
 $sql_parent_array = 'SELECT post_parent, post_date,post_status, post_name, post_type FROM wp_posts WHERE ID IN ('.$ids.')';
 $parent_post_array_return = $wpdb->get_results($sql_parent_array, ARRAY_A);
-//var_dump($parent_post_array_return);
+var_dump($parent_post_array_return);
 
 
 
@@ -561,7 +561,7 @@ function create_json_file ( $array_param_one){
 	}
 }
 
-create_json_file(pair_parent_with_child(reduce_sql_array_by_one_dimension($array_booking_product_id_sql_cmd), $parent_post_array_return, $product_id ));
+create_json_file($to_assign_assoc_array);
 
 
 
